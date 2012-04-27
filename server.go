@@ -3,10 +3,10 @@ package main
 import (
     "log"
     "time"
-    "kolekto"
     "net/http"
     "encoding/json"
     "github.com/bmizerany/pat"
+    "github.com/prasmussen/kolekto"
 )
 
 func jsonResponse(res http.ResponseWriter, i interface{}) {
