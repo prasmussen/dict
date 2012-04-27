@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+  <title>Dict v6.0</title>
+</head>
+<body>
+
+<script type="text/x-handlebars">
+  <div class="container">
+    <div class="row">
+      <div class="span12">
+        <ul class="breadcrumb">
+          <li><span class="divider">&nbsp;</span></li>
+          {{#each Dict.LanguageController}}
+            <li {{bindAttr class="selected:active"}}><a {{bindAttr href="href"}}>{{title}}</a><span class="divider">&nbsp;&nbsp;&nbsp;</span></li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span8 offset2">
+        <form class="form-inline" style="margin-bottom: 16px">
+          <div class="input-append">
+            {{view Dict.QueryInput class="span5" placeholder="Query..." autocomplete="off"}}<span class="add-on" style="padding-left: 10px; padding-right: 10px;">{{Dict.SelectedLanguageController.content.title}}</span>
+          </div>
+        </form> 
+        {{#with Dict.EntryController}}
+          {{#each paginated}}
+            <h2>{{word}}</h2>
+            <p>{{translation}}</p>
+          {{/each}}
+          {{#if needsPagination}}
+            {{view Bootstrap.Pagination contentBinding="Dict.EntryController.pages" indexBinding="Dict.EntryController.pageIndex" textPath="text"}}
+          {{/if}}
+        {{/with}}
+      </div>
+    </div>
+  </div>
+</script>
+
+<script src="lib/jquery-1.7.2.min.js"></script>
+<script src="lib/ember-0.9.7.1.min.js"></script>
+<script src="lib/ember-bootstrap.js"></script>
+<script src="lib/bootstrap.min.js"></script>
+<script src="dict.js"></script>
+</body>
+</html>
