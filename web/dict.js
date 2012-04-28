@@ -46,6 +46,10 @@ Dict.HashController = Ember.Object.create({
         });
     },
 
+    trigger: function() {
+        $(window).trigger("hashchange");
+    },
+
     onHashchange: function(hash) {
         if (!this.triggers.hasOwnProperty(hash)) {
             return;
@@ -341,4 +345,5 @@ Dict.EntryController = Ember.ArrayController.create({
     },
 });
 
-
+// Trigger the HashController so that all bindings get the correct initial state
+Dict.HashController.trigger();

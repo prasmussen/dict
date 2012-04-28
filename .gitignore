@@ -6,7 +6,6 @@
 # Folders
 _obj
 _test
-dictionaries
 
 # Architecture specific extensions/prefixes
 *.[568vq]
@@ -25,3 +24,11 @@ _testmain.go
 # Vim files
 *~
 *.swp
+
+# Dictionaries folder
+dictionaries
+*.json
+
+# Server binary
+server
+
