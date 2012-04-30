@@ -6,7 +6,7 @@ dict v6
 * The prefixed '^' can be circumvented by putting the query inside two slashes: '/&lt;query&gt;/'
 
 #####Examples
-* Find words with 30 or more characthers: [^ -]{30,}$
+* Find words with 30 or more characters: [^ -]{30,}$
 * Find words ending in 'dicate': /dicate$/
 * Find words containing 'bear': /bear/
 
@@ -18,11 +18,11 @@ dict v6
     </tr>
     <tr>
       <td>Tab</td>
-      <td>Jump to next language</td>
+      <td>Jump to the next language</td>
     </tr>
     <tr>
       <td>Shift-Tab</td>
-      <td>Jump to previous language</td>
+      <td>Jump to the previous language</td>
     </tr>
     <tr>
       <td>Arrow Down</td>
