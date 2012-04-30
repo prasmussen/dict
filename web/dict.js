@@ -34,7 +34,7 @@ Dict.Backend = Ember.Object.create({
             }
         });
     },
-})
+});
 
 Dict.HashController = Ember.Object.create({
     triggers: {},
@@ -78,6 +78,7 @@ Dict.HashController = Ember.Object.create({
 
 Dict.KeyController = Ember.Object.create({
     triggers: {},
+    modifiers: ["alt", "ctrl", "meta", "shift"], 
 
     init: function() {
         var self = this;
@@ -87,14 +88,14 @@ Dict.KeyController = Ember.Object.create({
     },
 
     onKeydown: function(e) {
-        var keyCode;
-        if (e.shiftKey) {
-            keyCode = "shift-" + e.keyCode;
-        } else if (e.altKey) {
-            keyCode = "alt-" + e.keyCode;
-        } else {
-            keyCode = e.keyCode;
-        }
+        var modifier = "";
+        this.modifiers.forEach(function(mod) {
+            if (e[mod + "Key"]) {
+                modifier += mod + "-";
+            }
+        });
+        var keyCode = modifier ? modifier + e.keyCode : e.keyCode;
+
         if (!this.triggers.hasOwnProperty(keyCode)) {
             return;
         }
