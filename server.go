@@ -63,13 +63,19 @@ func main() {
     }))
 
     p.Get("/api/dictionaries/:dict/:query", http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+        // Start measuring time
+        start := time.Now()
+
+        // Grab query params
         dict := req.URL.Query().Get(":dict")
         query := req.URL.Query().Get(":query")
-        t0 := time.Now()
+
+        // Find matches and return response
         entries, _ := k.Find(dict, query, 90)
-        t1 := time.Now()
-        log.Printf("The query (%s) took %v\n", query, t1.Sub(t0))
         jsonResponse(res, entries)
+
+        // Print out used time
+        log.Printf("The query (%s) took %v\n", query, time.Now().Sub(start))
     }))
 
     http.Handle("/", http.FileServer(http.Dir("./web/")))
