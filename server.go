@@ -1,6 +1,7 @@
 package main
 
 import (
+    "os"
     "log"
     "time"
     "net/http"
@@ -8,6 +9,11 @@ import (
     "github.com/bmizerany/pat"
     "./kolekto"
 )
+
+type Config struct {
+    Listen string
+    Mongodb string
+}
 
 func jsonResponse(res http.ResponseWriter, i interface{}) {
     res.Header().Set("Content-Type", "application/json")
@@ -17,11 +23,34 @@ func jsonResponse(res http.ResponseWriter, i interface{}) {
     }
 }
 
+func parseConfig(fname string) (*Config, error) {
+    f, err := os.Open(fname)
+    if err != nil {
+        return nil, err
+    }
+    defer f.Close()
+
+    var cfg *Config
+    if err := json.NewDecoder(f).Decode(&cfg); err != nil {
+        return nil, err
+    }
+
+    return cfg, nil
+}
+
 func main() {
-    k, err := kolekto.New()
+    cfg, err := parseConfig("config.json")
     if err != nil {
         log.Fatalln(err)
     }
+
+    log.Printf("Connecting to mongodb: %s\n", cfg.Mongodb)
+    k, err := kolekto.New(cfg.Mongodb)
+    if err != nil {
+        log.Fatalln(err)
+    }
+
+    log.Println("Connected")
 
     p := pat.New()
 
@@ -45,7 +74,9 @@ func main() {
 
     http.Handle("/", http.FileServer(http.Dir("./web/")))
     http.Handle("/api/", p)
-    err = http.ListenAndServe(":8082", nil)
+
+    log.Printf("Listening on %s\n", cfg.Listen)
+    err = http.ListenAndServe(cfg.Listen, nil)
     if err != nil {
         log.Fatalln("ListenAndServe: ", err)
     }
