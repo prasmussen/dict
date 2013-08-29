@@ -1,0 +1,4 @@
+{
+  "mongodb": "localhost:27017",
+  "listen": "0.0.0.0:8082"
+}
