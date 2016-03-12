@@ -11,7 +11,8 @@ import (
 )
 
 type Config struct {
-    Listen string
+    Cert string
+    Privkey string
     Mongodb string
 }
 
@@ -80,11 +81,12 @@ func main() {
 
     http.Handle("/", http.FileServer(http.Dir("./web/")))
     http.Handle("/api/", p)
+    httpsRedirector := http.RedirectHandler("https://d.rasm.se", http.StatusMovedPermanently)
 
-    log.Printf("Listening on %s\n", cfg.Listen)
-    err = http.ListenAndServe(cfg.Listen, nil)
+    log.Println("Listening on port 80 and 443")
+    go http.ListenAndServe(":80", httpsRedirector)
+    err = http.ListenAndServeTLS(":443", cfg.Cert, cfg.Privkey, nil)
     if err != nil {
         log.Fatalln("ListenAndServe: ", err)
     }
 }
-

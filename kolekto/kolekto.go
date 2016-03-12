@@ -13,8 +13,8 @@ type dbentry struct {
 }
 
 type DictionaryEntry struct {
-    Word string "json:`word`"
-    Translations []string "json:`translations`"
+    Word string `json:"word"`
+    Translations []string `json:"translations"`
 }
 
 type Dictionary struct {
