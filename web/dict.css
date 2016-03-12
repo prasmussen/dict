@@ -1,0 +1,25 @@
+.query {
+    margin-top: 20px;
+}
+
+.query .query-dropdown {
+    font-size: 16px;
+    height: 48px;
+    line-height: 40px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 12px;
+    padding-right: 30px;
+}
+
+.translations {
+    margin-top: 20px;
+}
+
+.translation {
+    margin-top: 20px;
+}
+
+p.title a {
+    color: #222324;
+}

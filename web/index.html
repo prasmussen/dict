@@ -1,48 +1,71 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
 <head>
-  <link rel="stylesheet" href="lib/bootstrap.min.css">
-  <title>Dict v6.0</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dict v7.0</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.0.15/css/bulma.min.css">
+  <link rel="stylesheet" href="dict.css">
 </head>
 <body>
 
-<script type="text/x-handlebars">
-  <div class="container">
-    <div class="row">
-      <div class="span12">
-        <ul class="breadcrumb">
-          <li><span class="divider">&nbsp;</span></li>
-          {{#each Dict.LanguageController}}
-            <li {{bindAttr class="selected:active"}}><a {{bindAttr href="href"}}>{{title}}</a><span class="divider">&nbsp;&nbsp;&nbsp;</span></li>
-          {{/each}}
-        </ul>
+  <header class="header">
+    <div class="container">
+      <div class="header-left">
+        <a class="header-tab is-active" href="#">NO-UK</a>
+        <a class="header-tab" href="#">UK-NO</a>
+        <a class="header-tab" href="#">NO-NO</a>
+        <a class="header-tab" href="#">UK-UK</a>
       </div>
     </div>
-    <div class="row">
-      <div class="span8 offset2">
-        <form class="form-inline" style="margin-bottom: 16px">
-          <div class="input-append">
-            {{view Dict.QueryInput class="span5" placeholder="Query..." autocomplete="off"}}<span class="add-on" style="padding-left: 10px; padding-right: 10px;">{{Dict.SelectedLanguageController.content.title}}</span>
-          </div>
-        </form> 
-        {{#with Dict.EntryController}}
-          {{#each paginated}}
-            <h2>{{word}}</h2>
-            <p>{{translation}}</p>
-          {{/each}}
-          {{#if needsPagination}}
-            {{view Bootstrap.Pagination contentBinding="Dict.EntryController.pages" indexBinding="Dict.EntryController.pageIndex" textPath="text"}}
-          {{/if}}
-        {{/with}}
+  </header>
+
+  <div class="container content">
+    <div class="query">
+      <p class="control is-grouped">
+        <span class="select">
+          <select class="query-dropdown">
+            <option>NO-UK</option>
+            <option>UK-NO</option>
+            <option>NO-NO</option>
+            <option>UK-UK</option>
+            <option>NO-DE</option>
+            <option>DE-NO</option>
+            <option>UK-FR</option>
+            <option>FR-UK</option>
+            <option>UK-ES</option>
+            <option>ES-UK</option>
+            <option>UK-SE</option>
+            <option>SE-UK</option>
+            <option>NO-ME</option>
+          </select>
+        </span>
+        <input class="input is-large" type="text" placeholder="Query">
+        <span class="select">
+          <select class="query-dropdown">
+            <option>Prefix</option>
+            <option>Regex</option>
+          </select>
+        </span>
+      </p>
+    <div>
+
+    <div class="translations">
+      <div class="translation">
+        <p class="title is-4"><a href="#">hest</a></p>
+        <p class="subtitle is-6">(sitte til - ) be on horseback, be mounted, (subst.) buck, horse, vaulting horse, (hestekraft) (subst.) horse, horsepower, (subst.) (familien Equidae, arten Equus caballus)) horse, (subst.) [sjakk] knight, (temme en - ) break a horse</p>
+      </div>
+      <div class="translation">
+        <p class="title is-4"><a href="#">hesteaktig</a></p>
+        <p class="subtitle is-6">(adj.) horsey, horsy</p>
+      </div>
+      <div class="translation">
+        <p class="title is-4"><a href="#">hestealoe</a></p>
+        <p class="subtitle is-6">(subst.) [botanikk] horse aloe</p>
+      </div>
+      <div class="translation">
+        <p class="title is-4"><a href="#">hesteambrosia</a></p>
+        <p class="subtitle is-6">(subst.) [botanikk] (Ambrosia trifida) giant ragweed</p>
       </div>
     </div>
   </div>
-</script>
-
-<script src="lib/jquery-1.7.2.min.js"></script>
-<script src="lib/ember-0.9.7.1.min.js"></script>
-<script src="lib/ember-bootstrap.js"></script>
-<script src="lib/bootstrap.min.js"></script>
-<script src="dict.js"></script>
 </body>
-</html>
