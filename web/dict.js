@@ -12224,6 +12224,168 @@ Elm.Utils.make = function (_elm) {
                               ,onInput: onInput
                               ,onChange: onChange};
 };
+Elm.Dictionary = Elm.Dictionary || {};
+Elm.Dictionary.make = function (_elm) {
+   "use strict";
+   _elm.Dictionary = _elm.Dictionary || {};
+   if (_elm.Dictionary.values) return _elm.Dictionary.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var dictValue = function (dict) {
+      var _p0 = dict;
+      switch (_p0.ctor)
+      {case "NO_UK": return "no_uk";
+         case "UK_NO": return "uk_no";
+         case "NO_NO": return "no_no";
+         case "UK_UK": return "uk_uk";
+         case "NO_DE": return "no_de";
+         case "DE_NO": return "de_no";
+         case "UK_FR": return "uk_fr";
+         case "FR_UK": return "fr_uk";
+         case "UK_ES": return "uk_es";
+         case "ES_UK": return "es_uk";
+         case "UK_SE": return "uk_se";
+         case "SE_UK": return "se_uk";
+         default: return "no_me";}
+   };
+   var dictLabel = function (dict) {
+      var _p1 = dict;
+      switch (_p1.ctor)
+      {case "NO_UK": return "NO-UK";
+         case "UK_NO": return "UK-NO";
+         case "NO_NO": return "NO-NO";
+         case "UK_UK": return "UK-UK";
+         case "NO_DE": return "NO-DE";
+         case "DE_NO": return "DE-NO";
+         case "UK_FR": return "UK-FR";
+         case "FR_UK": return "FR-UK";
+         case "UK_ES": return "UK-ES";
+         case "ES_UK": return "ES-UK";
+         case "UK_SE": return "UK-SE";
+         case "SE_UK": return "SE-UK";
+         default: return "NO-ME";}
+   };
+   var NO_ME = {ctor: "NO_ME"};
+   var SE_UK = {ctor: "SE_UK"};
+   var UK_SE = {ctor: "UK_SE"};
+   var ES_UK = {ctor: "ES_UK"};
+   var UK_ES = {ctor: "UK_ES"};
+   var FR_UK = {ctor: "FR_UK"};
+   var UK_FR = {ctor: "UK_FR"};
+   var DE_NO = {ctor: "DE_NO"};
+   var NO_DE = {ctor: "NO_DE"};
+   var UK_UK = {ctor: "UK_UK"};
+   var NO_NO = {ctor: "NO_NO"};
+   var UK_NO = {ctor: "UK_NO"};
+   var NO_UK = {ctor: "NO_UK"};
+   var defaultDict = NO_UK;
+   var toDict = function (str) {
+      var _p2 = str;
+      switch (_p2)
+      {case "no_uk": return NO_UK;
+         case "uk_no": return UK_NO;
+         case "no_no": return NO_NO;
+         case "uk_uk": return UK_UK;
+         case "no_de": return NO_DE;
+         case "de_no": return DE_NO;
+         case "uk_fr": return UK_FR;
+         case "fr_uk": return FR_UK;
+         case "uk_es": return UK_ES;
+         case "es_uk": return ES_UK;
+         case "uk_se": return UK_SE;
+         case "se_uk": return SE_UK;
+         case "no_me": return NO_ME;
+         default: return defaultDict;}
+   };
+   var allDicts = _U.list([NO_UK
+                          ,UK_NO
+                          ,NO_NO
+                          ,UK_UK
+                          ,NO_DE
+                          ,DE_NO
+                          ,UK_FR
+                          ,FR_UK
+                          ,UK_ES
+                          ,ES_UK
+                          ,UK_SE
+                          ,SE_UK
+                          ,NO_ME]);
+   return _elm.Dictionary.values = {_op: _op
+                                   ,NO_UK: NO_UK
+                                   ,UK_NO: UK_NO
+                                   ,NO_NO: NO_NO
+                                   ,UK_UK: UK_UK
+                                   ,NO_DE: NO_DE
+                                   ,DE_NO: DE_NO
+                                   ,UK_FR: UK_FR
+                                   ,FR_UK: FR_UK
+                                   ,UK_ES: UK_ES
+                                   ,ES_UK: ES_UK
+                                   ,UK_SE: UK_SE
+                                   ,SE_UK: SE_UK
+                                   ,NO_ME: NO_ME
+                                   ,dictLabel: dictLabel
+                                   ,dictValue: dictValue
+                                   ,toDict: toDict
+                                   ,defaultDict: defaultDict
+                                   ,allDicts: allDicts};
+};
+Elm.QueryMode = Elm.QueryMode || {};
+Elm.QueryMode.make = function (_elm) {
+   "use strict";
+   _elm.QueryMode = _elm.QueryMode || {};
+   if (_elm.QueryMode.values) return _elm.QueryMode.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var queryModeValue = function (mode) {
+      var _p0 = mode;
+      switch (_p0.ctor)
+      {case "Prefix": return "prefix";
+         case "Suffix": return "suffix";
+         default: return "regex";}
+   };
+   var queryModeLabel = function (mode) {
+      var _p1 = mode;
+      switch (_p1.ctor)
+      {case "Prefix": return "Prefix";
+         case "Suffix": return "Suffix";
+         default: return "Regex";}
+   };
+   var Regex = {ctor: "Regex"};
+   var Suffix = {ctor: "Suffix"};
+   var Prefix = {ctor: "Prefix"};
+   var defaultQueryMode = Prefix;
+   var toQueryMode = function (str) {
+      var _p2 = str;
+      switch (_p2)
+      {case "prefix": return Prefix;
+         case "suffix": return Suffix;
+         case "regex": return Regex;
+         default: return defaultQueryMode;}
+   };
+   var allQueryModes = _U.list([Prefix,Suffix,Regex]);
+   return _elm.QueryMode.values = {_op: _op
+                                  ,Prefix: Prefix
+                                  ,Suffix: Suffix
+                                  ,Regex: Regex
+                                  ,queryModeLabel: queryModeLabel
+                                  ,queryModeValue: queryModeValue
+                                  ,toQueryMode: toQueryMode
+                                  ,defaultQueryMode: defaultQueryMode
+                                  ,allQueryModes: allQueryModes};
+};
 Elm.DictApp = Elm.DictApp || {};
 Elm.DictApp.make = function (_elm) {
    "use strict";
@@ -12232,6 +12394,7 @@ Elm.DictApp.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Dictionary = Elm.Dictionary.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
@@ -12240,13 +12403,32 @@ Elm.DictApp.make = function (_elm) {
    $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $QueryMode = Elm.QueryMode.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $StartApp = Elm.StartApp.make(_elm),
    $String = Elm.String.make(_elm),
    $Task = Elm.Task.make(_elm),
    $Utils = Elm.Utils.make(_elm);
    var _op = {};
+   var apiUrl = F3(function (dict,mode,query) {
+      var q = function () {
+         var _p0 = mode;
+         switch (_p0.ctor)
+         {case "Prefix": return A2($Basics._op["++"],"^",query);
+            case "Suffix": return A2($Basics._op["++"],query,"$");
+            default: return query;}
+      }();
+      return A2($String.join,
+      "/",
+      A2($List.map,
+      $Http.uriEncode,
+      _U.list([""
+              ,"api"
+              ,"dictionaries"
+              ,$Dictionary.dictValue(dict)
+              ,q])));
+   });
+   var tabBarDicts = A2($List.take,4,$Dictionary.allDicts);
    var entryElement = function (t) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("entry")]),
@@ -12264,12 +12446,49 @@ Elm.DictApp.make = function (_elm) {
       _U.list([$Html$Attributes.$class("entries")]),
       A2($List.map,entryElement,entries));
    };
+   var queryModeDropdownOptionElement = F2(function (selectedMode,
+   mode) {
+      return A2($Html.option,
+      _U.list([$Html$Attributes.value($QueryMode.queryModeValue(mode))
+              ,$Html$Attributes.selected(_U.eq(mode,selectedMode))]),
+      _U.list([$Html.text($QueryMode.queryModeLabel(mode))]));
+   });
+   var dictDropdownOptionElement = F2(function (selectedDict,
+   dict) {
+      return A2($Html.option,
+      _U.list([$Html$Attributes.value($Dictionary.dictValue(dict))
+              ,$Html$Attributes.selected(_U.eq(dict,selectedDict))]),
+      _U.list([$Html.text($Dictionary.dictLabel(dict))]));
+   });
    var NewEntries = function (a) {
       return {ctor: "NewEntries",_0: a};
    };
    var ChangeDict = function (a) {
       return {ctor: "ChangeDict",_0: a};
    };
+   var headerTab = F3(function (address,selectedDict,dict) {
+      return A2($Html.a,
+      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
+                                                   ,_0: "header-tab"
+                                                   ,_1: true}
+                                                  ,{ctor: "_Tuple2"
+                                                   ,_0: "is-active"
+                                                   ,_1: _U.eq(dict,selectedDict)}]))
+              ,A2($Html$Events.onClick,address,ChangeDict(dict))]),
+      _U.list([$Html.text($Dictionary.dictLabel(dict))]));
+   });
+   var pageHeader = F2(function (address,model) {
+      var tabs = A2($List.map,
+      A2(headerTab,address,model.selectedDict),
+      tabBarDicts);
+      return A2($Html.header,
+      _U.list([$Html$Attributes.$class("header")]),
+      _U.list([A2($Html.div,
+      _U.list([$Html$Attributes.$class("container")]),
+      _U.list([A2($Html.div,
+      _U.list([$Html$Attributes.$class("header-left")]),
+      tabs)]))]));
+   });
    var ChangeQueryMode = function (a) {
       return {ctor: "ChangeQueryMode",_0: a};
    };
@@ -12283,41 +12502,8 @@ Elm.DictApp.make = function (_elm) {
               ,A2($Utils.onInput,address,Query)]),
       _U.list([]));
    };
-   var queryModeValue = function (mode) {
-      var _p0 = mode;
-      switch (_p0.ctor)
-      {case "Prefix": return "prefix";
-         case "Suffix": return "suffix";
-         default: return "regex";}
-   };
-   var queryModeLabel = function (mode) {
-      var _p1 = mode;
-      switch (_p1.ctor)
-      {case "Prefix": return "Prefix";
-         case "Suffix": return "Suffix";
-         default: return "Regex";}
-   };
-   var queryModeDropdownOptionElement = F2(function (selectedMode,
-   mode) {
-      return A2($Html.option,
-      _U.list([$Html$Attributes.value(queryModeValue(mode))
-              ,$Html$Attributes.selected(_U.eq(mode,selectedMode))]),
-      _U.list([$Html.text(queryModeLabel(mode))]));
-   });
-   var Regex = {ctor: "Regex"};
-   var Suffix = {ctor: "Suffix"};
-   var Prefix = {ctor: "Prefix"};
-   var defaultQueryMode = Prefix;
-   var toQueryMode = function (str) {
-      var _p2 = str;
-      switch (_p2)
-      {case "prefix": return Prefix;
-         case "suffix": return Suffix;
-         case "regex": return Regex;
-         default: return defaultQueryMode;}
-   };
    var toChangeQueryModeAction = function (str) {
-      return ChangeQueryMode(toQueryMode(str));
+      return ChangeQueryMode($QueryMode.toQueryMode(str));
    };
    var queryModeDropdown = F3(function (address,
    selectedMode,
@@ -12329,107 +12515,8 @@ Elm.DictApp.make = function (_elm) {
       queryModeDropdownOptionElement(selectedMode),
       modes));
    });
-   var allQueryModes = _U.list([Prefix,Suffix,Regex]);
-   var dictValue = function (dict) {
-      var _p3 = dict;
-      switch (_p3.ctor)
-      {case "NO_UK": return "no_uk";
-         case "UK_NO": return "uk_no";
-         case "NO_NO": return "no_no";
-         case "UK_UK": return "uk_uk";
-         case "NO_DE": return "no_de";
-         case "DE_NO": return "de_no";
-         case "UK_FR": return "uk_fr";
-         case "FR_UK": return "fr_uk";
-         case "UK_ES": return "uk_es";
-         case "ES_UK": return "es_uk";
-         case "UK_SE": return "uk_se";
-         case "SE_UK": return "se_uk";
-         default: return "no_me";}
-   };
-   var apiUrl = F3(function (dict,mode,query) {
-      var q = function () {
-         var _p4 = mode;
-         switch (_p4.ctor)
-         {case "Prefix": return A2($Basics._op["++"],"^",query);
-            case "Suffix": return A2($Basics._op["++"],query,"$");
-            default: return query;}
-      }();
-      return A2($String.join,
-      "/",
-      A2($List.map,
-      $Http.uriEncode,
-      _U.list(["","api","dictionaries",dictValue(dict),q])));
-   });
-   var dictLabel = function (dict) {
-      var _p5 = dict;
-      switch (_p5.ctor)
-      {case "NO_UK": return "NO-UK";
-         case "UK_NO": return "UK-NO";
-         case "NO_NO": return "NO-NO";
-         case "UK_UK": return "UK-UK";
-         case "NO_DE": return "NO-DE";
-         case "DE_NO": return "DE-NO";
-         case "UK_FR": return "UK-FR";
-         case "FR_UK": return "FR-UK";
-         case "UK_ES": return "UK-ES";
-         case "ES_UK": return "ES-UK";
-         case "UK_SE": return "UK-SE";
-         case "SE_UK": return "SE-UK";
-         default: return "NO-ME";}
-   };
-   var headerTab = F3(function (address,selectedDict,dict) {
-      return A2($Html.a,
-      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
-                                                   ,_0: "header-tab"
-                                                   ,_1: true}
-                                                  ,{ctor: "_Tuple2"
-                                                   ,_0: "is-active"
-                                                   ,_1: _U.eq(dict,selectedDict)}]))
-              ,A2($Html$Events.onClick,address,ChangeDict(dict))]),
-      _U.list([$Html.text(dictLabel(dict))]));
-   });
-   var dictDropdownOptionElement = F2(function (selectedDict,
-   dict) {
-      return A2($Html.option,
-      _U.list([$Html$Attributes.value(dictValue(dict))
-              ,$Html$Attributes.selected(_U.eq(dict,selectedDict))]),
-      _U.list([$Html.text(dictLabel(dict))]));
-   });
-   var NO_ME = {ctor: "NO_ME"};
-   var SE_UK = {ctor: "SE_UK"};
-   var UK_SE = {ctor: "UK_SE"};
-   var ES_UK = {ctor: "ES_UK"};
-   var UK_ES = {ctor: "UK_ES"};
-   var FR_UK = {ctor: "FR_UK"};
-   var UK_FR = {ctor: "UK_FR"};
-   var DE_NO = {ctor: "DE_NO"};
-   var NO_DE = {ctor: "NO_DE"};
-   var UK_UK = {ctor: "UK_UK"};
-   var NO_NO = {ctor: "NO_NO"};
-   var UK_NO = {ctor: "UK_NO"};
-   var NO_UK = {ctor: "NO_UK"};
-   var defaultDict = NO_UK;
-   var toDict = function (str) {
-      var _p6 = str;
-      switch (_p6)
-      {case "no_uk": return NO_UK;
-         case "uk_no": return UK_NO;
-         case "no_no": return NO_NO;
-         case "uk_uk": return UK_UK;
-         case "no_de": return NO_DE;
-         case "de_no": return DE_NO;
-         case "uk_fr": return UK_FR;
-         case "fr_uk": return FR_UK;
-         case "uk_es": return UK_ES;
-         case "es_uk": return ES_UK;
-         case "uk_se": return UK_SE;
-         case "se_uk": return SE_UK;
-         case "no_me": return NO_ME;
-         default: return defaultDict;}
-   };
    var toChangeDictAction = function (str) {
-      return ChangeDict(toDict(str));
+      return ChangeDict($Dictionary.toDict(str));
    };
    var dictDropdown = F3(function (address,selectedDict,dicts) {
       return A2($Html.select,
@@ -12437,19 +12524,6 @@ Elm.DictApp.make = function (_elm) {
               ,A2($Utils.onChange,address,toChangeDictAction)]),
       A2($List.map,dictDropdownOptionElement(selectedDict),dicts));
    });
-   var allDicts = _U.list([NO_UK
-                          ,UK_NO
-                          ,NO_NO
-                          ,UK_UK
-                          ,NO_DE
-                          ,DE_NO
-                          ,UK_FR
-                          ,FR_UK
-                          ,UK_ES
-                          ,ES_UK
-                          ,UK_SE
-                          ,SE_UK
-                          ,NO_ME]);
    var queryElement = F2(function (address,model) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("query")]),
@@ -12457,33 +12531,23 @@ Elm.DictApp.make = function (_elm) {
       _U.list([$Html$Attributes.$class("control is-grouped")]),
       _U.list([A2($Html.span,
               _U.list([$Html$Attributes.$class("select")]),
-              _U.list([A3(dictDropdown,address,model.selectedDict,allDicts)]))
+              _U.list([A3(dictDropdown,
+              address,
+              model.selectedDict,
+              $Dictionary.allDicts)]))
               ,searchInput(address)
               ,A2($Html.span,
               _U.list([$Html$Attributes.$class("select")]),
               _U.list([A3(queryModeDropdown,
               address,
               model.selectedQueryMode,
-              allQueryModes)]))]))]));
+              $QueryMode.allQueryModes)]))]))]));
    });
    var pageBody = F2(function (address,model) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("container content")]),
       _U.list([A2(queryElement,address,model)
               ,entriesElement(model.entries)]));
-   });
-   var tabBarDicts = A2($List.take,4,allDicts);
-   var pageHeader = F2(function (address,model) {
-      var tabs = A2($List.map,
-      A2(headerTab,address,model.selectedDict),
-      tabBarDicts);
-      return A2($Html.header,
-      _U.list([$Html$Attributes.$class("header")]),
-      _U.list([A2($Html.div,
-      _U.list([$Html$Attributes.$class("container")]),
-      _U.list([A2($Html.div,
-      _U.list([$Html$Attributes.$class("header-left")]),
-      tabs)]))]));
    });
    var view = F2(function (address,model) {
       return A2($Html.div,
@@ -12492,8 +12556,8 @@ Elm.DictApp.make = function (_elm) {
               ,A2(pageBody,address,model)]));
    });
    var initialModel = $Utils.noFx({query: ""
-                                  ,selectedDict: defaultDict
-                                  ,selectedQueryMode: defaultQueryMode
+                                  ,selectedDict: $Dictionary.defaultDict
+                                  ,selectedQueryMode: $QueryMode.defaultQueryMode
                                   ,entries: _U.list([])});
    var Model = F4(function (a,b,c,d) {
       return {query: a
@@ -12511,8 +12575,8 @@ Elm.DictApp.make = function (_elm) {
    "translations",
    $Json$Decode.list($Json$Decode.string))));
    var getEntries = F3(function (dict,mode,query) {
-      var _p7 = query;
-      if (_p7 === "") {
+      var _p1 = query;
+      if (_p1 === "") {
             return $Effects.none;
          } else {
             return $Effects.task(A2($Task.map,
@@ -12523,94 +12587,63 @@ Elm.DictApp.make = function (_elm) {
          }
    });
    var update = F2(function (action,model) {
-      var _p8 = action;
-      switch (_p8.ctor)
-      {case "Query": if (_p8._0 === "") {
+      var _p2 = action;
+      switch (_p2.ctor)
+      {case "Query": if (_p2._0 === "") {
                  return $Utils.noFx(_U.update(model,
                  {query: "",entries: _U.list([])}));
               } else {
-                 var _p9 = _p8._0;
+                 var _p3 = _p2._0;
                  return {ctor: "_Tuple2"
-                        ,_0: _U.update(model,{query: _p9})
+                        ,_0: _U.update(model,{query: _p3})
                         ,_1: A3(getEntries,
                         model.selectedDict,
                         model.selectedQueryMode,
-                        _p9)};
+                        _p3)};
               }
-         case "ChangeDict": var _p10 = _p8._0;
+         case "ChangeDict": var _p4 = _p2._0;
            return {ctor: "_Tuple2"
-                  ,_0: _U.update(model,{selectedDict: _p10})
-                  ,_1: A3(getEntries,_p10,model.selectedQueryMode,model.query)};
-         case "ChangeQueryMode": var _p11 = _p8._0;
+                  ,_0: _U.update(model,{selectedDict: _p4})
+                  ,_1: A3(getEntries,_p4,model.selectedQueryMode,model.query)};
+         case "ChangeQueryMode": var _p5 = _p2._0;
            return {ctor: "_Tuple2"
-                  ,_0: _U.update(model,{selectedQueryMode: _p11})
-                  ,_1: A3(getEntries,model.selectedDict,_p11,model.query)};
-         default: if (_p8._0.ctor === "Just") {
-                 return $Utils.noFx(_U.update(model,{entries: _p8._0._0}));
+                  ,_0: _U.update(model,{selectedQueryMode: _p5})
+                  ,_1: A3(getEntries,model.selectedDict,_p5,model.query)};
+         default: if (_p2._0.ctor === "Just") {
+                 return $Utils.noFx(_U.update(model,{entries: _p2._0._0}));
               } else {
                  return $Utils.noFx(_U.update(model,{entries: _U.list([])}));
               }}
    });
-   var app = $StartApp.start({init: initialModel
-                             ,view: view
-                             ,update: update
+   return _elm.DictApp.values = {_op: _op
+                                ,initialModel: initialModel
+                                ,update: update
+                                ,view: view};
+};
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $DictApp = Elm.DictApp.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $StartApp = Elm.StartApp.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var app = $StartApp.start({init: $DictApp.initialModel
+                             ,view: $DictApp.view
+                             ,update: $DictApp.update
                              ,inputs: _U.list([])});
    var main = app.html;
    var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",
    app.tasks);
-   return _elm.DictApp.values = {_op: _op
-                                ,Entry: Entry
-                                ,Model: Model
-                                ,initialModel: initialModel
-                                ,NO_UK: NO_UK
-                                ,UK_NO: UK_NO
-                                ,NO_NO: NO_NO
-                                ,UK_UK: UK_UK
-                                ,NO_DE: NO_DE
-                                ,DE_NO: DE_NO
-                                ,UK_FR: UK_FR
-                                ,FR_UK: FR_UK
-                                ,UK_ES: UK_ES
-                                ,ES_UK: ES_UK
-                                ,UK_SE: UK_SE
-                                ,SE_UK: SE_UK
-                                ,NO_ME: NO_ME
-                                ,dictLabel: dictLabel
-                                ,dictValue: dictValue
-                                ,toDict: toDict
-                                ,toChangeDictAction: toChangeDictAction
-                                ,Prefix: Prefix
-                                ,Suffix: Suffix
-                                ,Regex: Regex
-                                ,queryModeLabel: queryModeLabel
-                                ,queryModeValue: queryModeValue
-                                ,toQueryMode: toQueryMode
-                                ,toChangeQueryModeAction: toChangeQueryModeAction
-                                ,Query: Query
-                                ,ChangeQueryMode: ChangeQueryMode
-                                ,ChangeDict: ChangeDict
-                                ,NewEntries: NewEntries
-                                ,update: update
-                                ,headerTab: headerTab
-                                ,queryElement: queryElement
-                                ,searchInput: searchInput
-                                ,dictDropdownOptionElement: dictDropdownOptionElement
-                                ,queryModeDropdownOptionElement: queryModeDropdownOptionElement
-                                ,dictDropdown: dictDropdown
-                                ,queryModeDropdown: queryModeDropdown
-                                ,entriesElement: entriesElement
-                                ,entryElement: entryElement
-                                ,defaultDict: defaultDict
-                                ,defaultQueryMode: defaultQueryMode
-                                ,tabBarDicts: tabBarDicts
-                                ,allDicts: allDicts
-                                ,allQueryModes: allQueryModes
-                                ,pageHeader: pageHeader
-                                ,pageBody: pageBody
-                                ,view: view
-                                ,getEntries: getEntries
-                                ,entriesDecoder: entriesDecoder
-                                ,apiUrl: apiUrl
-                                ,app: app
-                                ,main: main};
+   return _elm.Main.values = {_op: _op,app: app,main: main};
 };
