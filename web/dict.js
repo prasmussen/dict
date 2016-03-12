@@ -12184,46 +12184,6 @@ Elm.StartApp.make = function (_elm) {
                                  ,Config: Config
                                  ,App: App};
 };
-Elm.Utils = Elm.Utils || {};
-Elm.Utils.make = function (_elm) {
-   "use strict";
-   _elm.Utils = _elm.Utils || {};
-   if (_elm.Utils.values) return _elm.Utils.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Html$Events = Elm.Html.Events.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var onChange = F2(function (address,f) {
-      return A3($Html$Events.on,
-      "change",
-      $Html$Events.targetValue,
-      function (v) {
-         return A2($Signal.message,address,f(v));
-      });
-   });
-   var onInput = F2(function (address,f) {
-      return A3($Html$Events.on,
-      "input",
-      $Html$Events.targetValue,
-      function (v) {
-         return A2($Signal.message,address,f(v));
-      });
-   });
-   var noFx = function (model) {
-      return {ctor: "_Tuple2",_0: model,_1: $Effects.none};
-   };
-   return _elm.Utils.values = {_op: _op
-                              ,noFx: noFx
-                              ,onInput: onInput
-                              ,onChange: onChange};
-};
 Elm.Dictionary = Elm.Dictionary || {};
 Elm.Dictionary.make = function (_elm) {
    "use strict";
@@ -12386,6 +12346,223 @@ Elm.QueryMode.make = function (_elm) {
                                   ,defaultQueryMode: defaultQueryMode
                                   ,allQueryModes: allQueryModes};
 };
+Elm.DictTypes = Elm.DictTypes || {};
+Elm.DictTypes.make = function (_elm) {
+   "use strict";
+   _elm.DictTypes = _elm.DictTypes || {};
+   if (_elm.DictTypes.values) return _elm.DictTypes.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dictionary = Elm.Dictionary.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $QueryMode = Elm.QueryMode.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var Model = F4(function (a,b,c,d) {
+      return {query: a
+             ,selectedDict: b
+             ,selectedQueryMode: c
+             ,entries: d};
+   });
+   var Entry = F2(function (a,b) {
+      return {word: a,translations: b};
+   });
+   var NewEntries = function (a) {
+      return {ctor: "NewEntries",_0: a};
+   };
+   var ChangeDict = function (a) {
+      return {ctor: "ChangeDict",_0: a};
+   };
+   var toChangeDictAction = function (str) {
+      return ChangeDict($Dictionary.toDict(str));
+   };
+   var ChangeQueryMode = function (a) {
+      return {ctor: "ChangeQueryMode",_0: a};
+   };
+   var toChangeQueryModeAction = function (str) {
+      return ChangeQueryMode($QueryMode.toQueryMode(str));
+   };
+   var Query = function (a) {    return {ctor: "Query",_0: a};};
+   return _elm.DictTypes.values = {_op: _op
+                                  ,Query: Query
+                                  ,ChangeQueryMode: ChangeQueryMode
+                                  ,ChangeDict: ChangeDict
+                                  ,NewEntries: NewEntries
+                                  ,Entry: Entry
+                                  ,Model: Model
+                                  ,toChangeDictAction: toChangeDictAction
+                                  ,toChangeQueryModeAction: toChangeQueryModeAction};
+};
+Elm.Utils = Elm.Utils || {};
+Elm.Utils.make = function (_elm) {
+   "use strict";
+   _elm.Utils = _elm.Utils || {};
+   if (_elm.Utils.values) return _elm.Utils.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var onChange = F2(function (address,f) {
+      return A3($Html$Events.on,
+      "change",
+      $Html$Events.targetValue,
+      function (v) {
+         return A2($Signal.message,address,f(v));
+      });
+   });
+   var onInput = F2(function (address,f) {
+      return A3($Html$Events.on,
+      "input",
+      $Html$Events.targetValue,
+      function (v) {
+         return A2($Signal.message,address,f(v));
+      });
+   });
+   var noFx = function (model) {
+      return {ctor: "_Tuple2",_0: model,_1: $Effects.none};
+   };
+   return _elm.Utils.values = {_op: _op
+                              ,noFx: noFx
+                              ,onInput: onInput
+                              ,onChange: onChange};
+};
+Elm.DictHtml = Elm.DictHtml || {};
+Elm.DictHtml.make = function (_elm) {
+   "use strict";
+   _elm.DictHtml = _elm.DictHtml || {};
+   if (_elm.DictHtml.values) return _elm.DictHtml.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $DictTypes = Elm.DictTypes.make(_elm),
+   $Dictionary = Elm.Dictionary.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $QueryMode = Elm.QueryMode.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Utils = Elm.Utils.make(_elm);
+   var _op = {};
+   var entryRow = function (entry) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("entry")]),
+      _U.list([A2($Html.p,
+              _U.list([$Html$Attributes.$class("title is-4")]),
+              _U.list([A2($Html.a,
+              _U.list([]),
+              _U.list([$Html.text(entry.word)]))]))
+              ,A2($Html.p,
+              _U.list([$Html$Attributes.$class("subtitle is-6")]),
+              _U.list([$Html.text($String.concat(entry.translations))]))]));
+   };
+   var entriesElement = function (entries) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("entries")]),
+      A2($List.map,entryRow,entries));
+   };
+   var queryModeDropdownOption = F2(function (selectedMode,mode) {
+      return A2($Html.option,
+      _U.list([$Html$Attributes.value($QueryMode.queryModeValue(mode))
+              ,$Html$Attributes.selected(_U.eq(mode,selectedMode))]),
+      _U.list([$Html.text($QueryMode.queryModeLabel(mode))]));
+   });
+   var dictDropdownOption = F2(function (selectedDict,dict) {
+      return A2($Html.option,
+      _U.list([$Html$Attributes.value($Dictionary.dictValue(dict))
+              ,$Html$Attributes.selected(_U.eq(dict,selectedDict))]),
+      _U.list([$Html.text($Dictionary.dictLabel(dict))]));
+   });
+   var queryModeDropdown = F3(function (address,
+   selectedMode,
+   modes) {
+      return A2($Html.select,
+      _U.list([$Html$Attributes.$class("query-dropdown")
+              ,A2($Utils.onChange,
+              address,
+              $DictTypes.toChangeQueryModeAction)]),
+      A2($List.map,queryModeDropdownOption(selectedMode),modes));
+   });
+   var dictDropdown = F3(function (address,selectedDict,dicts) {
+      return A2($Html.select,
+      _U.list([$Html$Attributes.$class("query-dropdown")
+              ,A2($Utils.onChange,address,$DictTypes.toChangeDictAction)]),
+      A2($List.map,dictDropdownOption(selectedDict),dicts));
+   });
+   var queryInputElement = function (address) {
+      return A2($Html.input,
+      _U.list([$Html$Attributes.$class("input is-large")
+              ,$Html$Attributes.type$("text")
+              ,$Html$Attributes.placeholder("Query")
+              ,$Html$Attributes.autofocus(true)
+              ,A2($Utils.onInput,address,$DictTypes.Query)]),
+      _U.list([]));
+   };
+   var queryElement = F2(function (address,model) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("query")]),
+      _U.list([A2($Html.p,
+      _U.list([$Html$Attributes.$class("control is-grouped")]),
+      _U.list([A2($Html.span,
+              _U.list([$Html$Attributes.$class("select")]),
+              _U.list([A3(dictDropdown,
+              address,
+              model.selectedDict,
+              $Dictionary.allDicts)]))
+              ,queryInputElement(address)
+              ,A2($Html.span,
+              _U.list([$Html$Attributes.$class("select")]),
+              _U.list([A3(queryModeDropdown,
+              address,
+              model.selectedQueryMode,
+              $QueryMode.allQueryModes)]))]))]));
+   });
+   var headerTabElement = F3(function (address,selectedDict,dict) {
+      return A2($Html.a,
+      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
+                                                   ,_0: "header-tab"
+                                                   ,_1: true}
+                                                  ,{ctor: "_Tuple2"
+                                                   ,_0: "is-active"
+                                                   ,_1: _U.eq(dict,selectedDict)}]))
+              ,A2($Html$Events.onClick,address,$DictTypes.ChangeDict(dict))]),
+      _U.list([$Html.text($Dictionary.dictLabel(dict))]));
+   });
+   var pageBody = F2(function (address,model) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("container content")]),
+      _U.list([A2(queryElement,address,model)
+              ,entriesElement(model.entries)]));
+   });
+   var pageHeader = F3(function (address,model,dicts) {
+      var tabs = A2($List.map,
+      A2(headerTabElement,address,model.selectedDict),
+      dicts);
+      return A2($Html.header,
+      _U.list([$Html$Attributes.$class("header")]),
+      _U.list([A2($Html.div,
+      _U.list([$Html$Attributes.$class("container")]),
+      _U.list([A2($Html.div,
+      _U.list([$Html$Attributes.$class("header-left")]),
+      tabs)]))]));
+   });
+   return _elm.DictHtml.values = {_op: _op
+                                 ,pageHeader: pageHeader
+                                 ,pageBody: pageBody};
+};
 Elm.DictApp = Elm.DictApp || {};
 Elm.DictApp.make = function (_elm) {
    "use strict";
@@ -12394,11 +12571,11 @@ Elm.DictApp.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $DictHtml = Elm.DictHtml.make(_elm),
+   $DictTypes = Elm.DictTypes.make(_elm),
    $Dictionary = Elm.Dictionary.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $Html$Events = Elm.Html.Events.make(_elm),
    $Http = Elm.Http.make(_elm),
    $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
@@ -12428,148 +12605,8 @@ Elm.DictApp.make = function (_elm) {
               ,$Dictionary.dictValue(dict)
               ,q])));
    });
-   var tabBarDicts = A2($List.take,4,$Dictionary.allDicts);
-   var entryElement = function (t) {
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("entry")]),
-      _U.list([A2($Html.p,
-              _U.list([$Html$Attributes.$class("title is-4")]),
-              _U.list([A2($Html.a,
-              _U.list([]),
-              _U.list([$Html.text(t.word)]))]))
-              ,A2($Html.p,
-              _U.list([$Html$Attributes.$class("subtitle is-6")]),
-              _U.list([$Html.text($String.concat(t.translations))]))]));
-   };
-   var entriesElement = function (entries) {
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("entries")]),
-      A2($List.map,entryElement,entries));
-   };
-   var queryModeDropdownOptionElement = F2(function (selectedMode,
-   mode) {
-      return A2($Html.option,
-      _U.list([$Html$Attributes.value($QueryMode.queryModeValue(mode))
-              ,$Html$Attributes.selected(_U.eq(mode,selectedMode))]),
-      _U.list([$Html.text($QueryMode.queryModeLabel(mode))]));
-   });
-   var dictDropdownOptionElement = F2(function (selectedDict,
-   dict) {
-      return A2($Html.option,
-      _U.list([$Html$Attributes.value($Dictionary.dictValue(dict))
-              ,$Html$Attributes.selected(_U.eq(dict,selectedDict))]),
-      _U.list([$Html.text($Dictionary.dictLabel(dict))]));
-   });
-   var NewEntries = function (a) {
-      return {ctor: "NewEntries",_0: a};
-   };
-   var ChangeDict = function (a) {
-      return {ctor: "ChangeDict",_0: a};
-   };
-   var headerTab = F3(function (address,selectedDict,dict) {
-      return A2($Html.a,
-      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
-                                                   ,_0: "header-tab"
-                                                   ,_1: true}
-                                                  ,{ctor: "_Tuple2"
-                                                   ,_0: "is-active"
-                                                   ,_1: _U.eq(dict,selectedDict)}]))
-              ,A2($Html$Events.onClick,address,ChangeDict(dict))]),
-      _U.list([$Html.text($Dictionary.dictLabel(dict))]));
-   });
-   var pageHeader = F2(function (address,model) {
-      var tabs = A2($List.map,
-      A2(headerTab,address,model.selectedDict),
-      tabBarDicts);
-      return A2($Html.header,
-      _U.list([$Html$Attributes.$class("header")]),
-      _U.list([A2($Html.div,
-      _U.list([$Html$Attributes.$class("container")]),
-      _U.list([A2($Html.div,
-      _U.list([$Html$Attributes.$class("header-left")]),
-      tabs)]))]));
-   });
-   var ChangeQueryMode = function (a) {
-      return {ctor: "ChangeQueryMode",_0: a};
-   };
-   var Query = function (a) {    return {ctor: "Query",_0: a};};
-   var searchInput = function (address) {
-      return A2($Html.input,
-      _U.list([$Html$Attributes.$class("input is-large")
-              ,$Html$Attributes.type$("text")
-              ,$Html$Attributes.placeholder("Query")
-              ,$Html$Attributes.autofocus(true)
-              ,A2($Utils.onInput,address,Query)]),
-      _U.list([]));
-   };
-   var toChangeQueryModeAction = function (str) {
-      return ChangeQueryMode($QueryMode.toQueryMode(str));
-   };
-   var queryModeDropdown = F3(function (address,
-   selectedMode,
-   modes) {
-      return A2($Html.select,
-      _U.list([$Html$Attributes.$class("query-dropdown")
-              ,A2($Utils.onChange,address,toChangeQueryModeAction)]),
-      A2($List.map,
-      queryModeDropdownOptionElement(selectedMode),
-      modes));
-   });
-   var toChangeDictAction = function (str) {
-      return ChangeDict($Dictionary.toDict(str));
-   };
-   var dictDropdown = F3(function (address,selectedDict,dicts) {
-      return A2($Html.select,
-      _U.list([$Html$Attributes.$class("query-dropdown")
-              ,A2($Utils.onChange,address,toChangeDictAction)]),
-      A2($List.map,dictDropdownOptionElement(selectedDict),dicts));
-   });
-   var queryElement = F2(function (address,model) {
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("query")]),
-      _U.list([A2($Html.p,
-      _U.list([$Html$Attributes.$class("control is-grouped")]),
-      _U.list([A2($Html.span,
-              _U.list([$Html$Attributes.$class("select")]),
-              _U.list([A3(dictDropdown,
-              address,
-              model.selectedDict,
-              $Dictionary.allDicts)]))
-              ,searchInput(address)
-              ,A2($Html.span,
-              _U.list([$Html$Attributes.$class("select")]),
-              _U.list([A3(queryModeDropdown,
-              address,
-              model.selectedQueryMode,
-              $QueryMode.allQueryModes)]))]))]));
-   });
-   var pageBody = F2(function (address,model) {
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("container content")]),
-      _U.list([A2(queryElement,address,model)
-              ,entriesElement(model.entries)]));
-   });
-   var view = F2(function (address,model) {
-      return A2($Html.div,
-      _U.list([]),
-      _U.list([A2(pageHeader,address,model)
-              ,A2(pageBody,address,model)]));
-   });
-   var initialModel = $Utils.noFx({query: ""
-                                  ,selectedDict: $Dictionary.defaultDict
-                                  ,selectedQueryMode: $QueryMode.defaultQueryMode
-                                  ,entries: _U.list([])});
-   var Model = F4(function (a,b,c,d) {
-      return {query: a
-             ,selectedDict: b
-             ,selectedQueryMode: c
-             ,entries: d};
-   });
-   var Entry = F2(function (a,b) {
-      return {word: a,translations: b};
-   });
    var entriesDecoder = $Json$Decode.list(A3($Json$Decode.object2,
-   Entry,
+   $DictTypes.Entry,
    A2($Json$Decode._op[":="],"word",$Json$Decode.string),
    A2($Json$Decode._op[":="],
    "translations",
@@ -12580,11 +12617,18 @@ Elm.DictApp.make = function (_elm) {
             return $Effects.none;
          } else {
             return $Effects.task(A2($Task.map,
-            NewEntries,
+            $DictTypes.NewEntries,
             $Task.toMaybe(A2($Http.get,
             entriesDecoder,
             A3(apiUrl,dict,mode,query)))));
          }
+   });
+   var headerDicts = A2($List.take,4,$Dictionary.allDicts);
+   var view = F2(function (address,model) {
+      return A2($Html.div,
+      _U.list([]),
+      _U.list([A3($DictHtml.pageHeader,address,model,headerDicts)
+              ,A2($DictHtml.pageBody,address,model)]));
    });
    var update = F2(function (action,model) {
       var _p2 = action;
@@ -12615,6 +12659,10 @@ Elm.DictApp.make = function (_elm) {
                  return $Utils.noFx(_U.update(model,{entries: _U.list([])}));
               }}
    });
+   var initialModel = $Utils.noFx({query: ""
+                                  ,selectedDict: $Dictionary.defaultDict
+                                  ,selectedQueryMode: $QueryMode.defaultQueryMode
+                                  ,entries: _U.list([])});
    return _elm.DictApp.values = {_op: _op
                                 ,initialModel: initialModel
                                 ,update: update
