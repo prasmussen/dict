@@ -26,4 +26,3 @@ toChangeDictAction str = ChangeDict (toDict str)
 
 toChangeQueryModeAction : String -> Action
 toChangeQueryModeAction str = ChangeQueryMode (toQueryMode str)
-

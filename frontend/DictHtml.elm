@@ -17,7 +17,7 @@ import DictTypes exposing (..)
 pageHeader : Address Action -> Model -> List Dictionary -> Html
 pageHeader address model dicts =
   let tabs =
-    List.map (headerTabElement address model.selectedDict) dicts
+    List.map (headerTab address model.selectedDict) dicts
   in
     header [class "header"] [
       div [class "container"] [
@@ -32,8 +32,8 @@ pageBody address model =
     entriesElement model.entries
   ]
 
-headerTabElement : Address Action -> Dictionary -> Dictionary -> Html
-headerTabElement address selectedDict dict =
+headerTab : Address Action -> Dictionary -> Dictionary -> Html
+headerTab address selectedDict dict =
   a [
     classList [
       ("header-tab", True),

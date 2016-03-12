@@ -9,11 +9,11 @@ import Effects exposing (Effects)
 import Http
 
 -- Local imports
+import DictTypes exposing (..)
 import Dictionary exposing (..)
 import QueryMode exposing (..)
-import DictTypes exposing (..)
-import DictHtml exposing (..)
-import Utils exposing (..)
+import DictHtml exposing (pageHeader, pageBody)
+import Utils exposing (noFx)
 
 
 initialModel : (Model, Effects Action)
@@ -43,13 +43,13 @@ update action model =
 
 view : Address Action -> Model -> Html
 view address model =
-  div [] [
-    pageHeader address model headerDicts,
-    pageBody address model
-  ]
-
-headerDicts : List Dictionary
-headerDicts = List.take 4 allDicts
+  let
+    dicts = List.take 4 allDicts
+  in
+    div [] [
+      pageHeader address model dicts,
+      pageBody address model
+    ]
 
 getEntries : Dictionary -> QueryMode -> String -> Effects Action
 getEntries dict mode query =
@@ -61,7 +61,6 @@ getEntries dict mode query =
         |> Task.toMaybe
         |> Task.map NewEntries
         |> Effects.task
-
 
 entriesDecoder : Json.Decoder (List Entry)
 entriesDecoder =
