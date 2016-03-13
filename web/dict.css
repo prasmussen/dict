@@ -23,3 +23,7 @@
 p.title a {
     color: #222324;
 }
+
+.entries p.translation {
+    margin-bottom: 5px;
+}
