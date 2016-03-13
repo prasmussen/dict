@@ -12530,7 +12530,7 @@ Elm.DictHtml.make = function (_elm) {
               model.selectedQueryMode,
               $QueryMode.allQueryModes)]))]))]));
    });
-   var headerTabElement = F3(function (address,selectedDict,dict) {
+   var headerTab = F3(function (address,selectedDict,dict) {
       return A2($Html.a,
       _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
                                                    ,_0: "header-tab"
@@ -12549,7 +12549,7 @@ Elm.DictHtml.make = function (_elm) {
    });
    var pageHeader = F3(function (address,model,dicts) {
       var tabs = A2($List.map,
-      A2(headerTabElement,address,model.selectedDict),
+      A2(headerTab,address,model.selectedDict),
       dicts);
       return A2($Html.header,
       _U.list([$Html$Attributes.$class("header")]),
@@ -12623,11 +12623,11 @@ Elm.DictApp.make = function (_elm) {
             A3(apiUrl,dict,mode,query)))));
          }
    });
-   var headerDicts = A2($List.take,4,$Dictionary.allDicts);
    var view = F2(function (address,model) {
+      var dicts = A2($List.take,4,$Dictionary.allDicts);
       return A2($Html.div,
       _U.list([]),
-      _U.list([A3($DictHtml.pageHeader,address,model,headerDicts)
+      _U.list([A3($DictHtml.pageHeader,address,model,dicts)
               ,A2($DictHtml.pageBody,address,model)]));
    });
    var update = F2(function (action,model) {
