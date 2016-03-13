@@ -32,3 +32,10 @@ defaultQueryMode = Prefix
 
 allQueryModes : List QueryMode
 allQueryModes = [Prefix, Suffix, Regex]
+
+queryModeQuery : QueryMode -> String -> String
+queryModeQuery mode query =
+  case mode of
+    Prefix -> "^" ++ query
+    Suffix -> query ++ "$"
+    Regex -> query

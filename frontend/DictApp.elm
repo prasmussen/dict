@@ -70,13 +70,6 @@ entriesDecoder =
 
 apiUrl : Dictionary -> QueryMode -> String -> String
 apiUrl dict mode query =
-  let
-    q =
-      case mode of
-        Prefix -> "^" ++ query
-        Suffix -> query ++ "$"
-        Regex -> query
-  in
-    ["", "api", "dictionaries", dictValue dict, q]
-      |> List.map Http.uriEncode
-      |> join "/"
+  ["", "api", "dictionaries", dictValue dict, queryModeQuery mode query]
+    |> List.map Http.uriEncode
+    |> join "/"
