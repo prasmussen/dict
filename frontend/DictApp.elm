@@ -77,5 +77,6 @@ apiUrl dict mode query =
         Suffix -> query ++ "$"
         Regex -> query
   in
-    List.map Http.uriEncode ["", "api", "dictionaries", dictValue dict, q]
+    ["", "api", "dictionaries", dictValue dict, q]
+      |> List.map Http.uriEncode
       |> join "/"
