@@ -100,8 +100,6 @@ entryRow entry =
     translation t = p [class "translation"] [text t]
   in
     div [class "entry"] [
-      p [class "title is-4"] [
-        a [] [text entry.word]
-      ],
+      p [class "title is-4"] [text entry.word],
       p [class "subtitle is-6"] (List.map translation entry.translations)
     ]
