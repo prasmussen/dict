@@ -12309,16 +12309,23 @@ Elm.QueryMode.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var queryModeValue = function (mode) {
+   var queryModeQuery = F2(function (mode,query) {
       var _p0 = mode;
       switch (_p0.ctor)
+      {case "Prefix": return A2($Basics._op["++"],"^",query);
+         case "Suffix": return A2($Basics._op["++"],query,"$");
+         default: return query;}
+   });
+   var queryModeValue = function (mode) {
+      var _p1 = mode;
+      switch (_p1.ctor)
       {case "Prefix": return "prefix";
          case "Suffix": return "suffix";
          default: return "regex";}
    };
    var queryModeLabel = function (mode) {
-      var _p1 = mode;
-      switch (_p1.ctor)
+      var _p2 = mode;
+      switch (_p2.ctor)
       {case "Prefix": return "Prefix";
          case "Suffix": return "Suffix";
          default: return "Regex";}
@@ -12328,8 +12335,8 @@ Elm.QueryMode.make = function (_elm) {
    var Prefix = {ctor: "Prefix"};
    var defaultQueryMode = Prefix;
    var toQueryMode = function (str) {
-      var _p2 = str;
-      switch (_p2)
+      var _p3 = str;
+      switch (_p3)
       {case "prefix": return Prefix;
          case "suffix": return Suffix;
          case "regex": return Regex;
@@ -12344,7 +12351,8 @@ Elm.QueryMode.make = function (_elm) {
                                   ,queryModeValue: queryModeValue
                                   ,toQueryMode: toQueryMode
                                   ,defaultQueryMode: defaultQueryMode
-                                  ,allQueryModes: allQueryModes};
+                                  ,allQueryModes: allQueryModes
+                                  ,queryModeQuery: queryModeQuery};
 };
 Elm.DictTypes = Elm.DictTypes || {};
 Elm.DictTypes.make = function (_elm) {
@@ -12454,20 +12462,22 @@ Elm.DictHtml.make = function (_elm) {
    $QueryMode = Elm.QueryMode.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm),
    $Utils = Elm.Utils.make(_elm);
    var _op = {};
    var entryRow = function (entry) {
+      var translation = function (t) {
+         return A2($Html.p,
+         _U.list([$Html$Attributes.$class("translation")]),
+         _U.list([$Html.text(t)]));
+      };
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("entry")]),
       _U.list([A2($Html.p,
               _U.list([$Html$Attributes.$class("title is-4")]),
-              _U.list([A2($Html.a,
-              _U.list([]),
-              _U.list([$Html.text(entry.word)]))]))
+              _U.list([$Html.text(entry.word)]))
               ,A2($Html.p,
               _U.list([$Html$Attributes.$class("subtitle is-6")]),
-              _U.list([$Html.text($String.concat(entry.translations))]))]));
+              A2($List.map,translation,entry.translations))]));
    };
    var entriesElement = function (entries) {
       return A2($Html.div,
@@ -12588,13 +12598,6 @@ Elm.DictApp.make = function (_elm) {
    $Utils = Elm.Utils.make(_elm);
    var _op = {};
    var apiUrl = F3(function (dict,mode,query) {
-      var q = function () {
-         var _p0 = mode;
-         switch (_p0.ctor)
-         {case "Prefix": return A2($Basics._op["++"],"^",query);
-            case "Suffix": return A2($Basics._op["++"],query,"$");
-            default: return query;}
-      }();
       return A2($String.join,
       "/",
       A2($List.map,
@@ -12603,7 +12606,7 @@ Elm.DictApp.make = function (_elm) {
               ,"api"
               ,"dictionaries"
               ,$Dictionary.dictValue(dict)
-              ,q])));
+              ,A2($QueryMode.queryModeQuery,mode,query)])));
    });
    var entriesDecoder = $Json$Decode.list(A3($Json$Decode.object2,
    $DictTypes.Entry,
@@ -12612,8 +12615,8 @@ Elm.DictApp.make = function (_elm) {
    "translations",
    $Json$Decode.list($Json$Decode.string))));
    var getEntries = F3(function (dict,mode,query) {
-      var _p1 = query;
-      if (_p1 === "") {
+      var _p0 = query;
+      if (_p0 === "") {
             return $Effects.none;
          } else {
             return $Effects.task(A2($Task.map,
@@ -12631,30 +12634,30 @@ Elm.DictApp.make = function (_elm) {
               ,A2($DictHtml.pageBody,address,model)]));
    });
    var update = F2(function (action,model) {
-      var _p2 = action;
-      switch (_p2.ctor)
-      {case "Query": if (_p2._0 === "") {
+      var _p1 = action;
+      switch (_p1.ctor)
+      {case "Query": if (_p1._0 === "") {
                  return $Utils.noFx(_U.update(model,
                  {query: "",entries: _U.list([])}));
               } else {
-                 var _p3 = _p2._0;
+                 var _p2 = _p1._0;
                  return {ctor: "_Tuple2"
-                        ,_0: _U.update(model,{query: _p3})
+                        ,_0: _U.update(model,{query: _p2})
                         ,_1: A3(getEntries,
                         model.selectedDict,
                         model.selectedQueryMode,
-                        _p3)};
+                        _p2)};
               }
-         case "ChangeDict": var _p4 = _p2._0;
+         case "ChangeDict": var _p3 = _p1._0;
            return {ctor: "_Tuple2"
-                  ,_0: _U.update(model,{selectedDict: _p4})
-                  ,_1: A3(getEntries,_p4,model.selectedQueryMode,model.query)};
-         case "ChangeQueryMode": var _p5 = _p2._0;
+                  ,_0: _U.update(model,{selectedDict: _p3})
+                  ,_1: A3(getEntries,_p3,model.selectedQueryMode,model.query)};
+         case "ChangeQueryMode": var _p4 = _p1._0;
            return {ctor: "_Tuple2"
-                  ,_0: _U.update(model,{selectedQueryMode: _p5})
-                  ,_1: A3(getEntries,model.selectedDict,_p5,model.query)};
-         default: if (_p2._0.ctor === "Just") {
-                 return $Utils.noFx(_U.update(model,{entries: _p2._0._0}));
+                  ,_0: _U.update(model,{selectedQueryMode: _p4})
+                  ,_1: A3(getEntries,model.selectedDict,_p4,model.query)};
+         default: if (_p1._0.ctor === "Just") {
+                 return $Utils.noFx(_U.update(model,{entries: _p1._0._0}));
               } else {
                  return $Utils.noFx(_U.update(model,{entries: _U.list([])}));
               }}
