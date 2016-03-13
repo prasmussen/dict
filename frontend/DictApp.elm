@@ -1,4 +1,4 @@
-module DictApp (initialModel, update, view) where
+module DictApp (initialModel, update, view, inputs) where
 
 import Html exposing (Html, div)
 import String exposing (concat, join)
@@ -13,7 +13,7 @@ import DictTypes exposing (..)
 import Dictionary exposing (..)
 import QueryMode exposing (..)
 import DictHtml exposing (pageHeader, pageBody)
-import Utils exposing (noFx)
+import Utils exposing (noFx, nextElement, prevElement)
 
 
 initialModel : (Model, Effects Action)
@@ -28,14 +28,35 @@ initialModel = {
 update : Action -> Model -> (Model, Effects Action)
 update action model =
   case action of
+    NoOp ->
+      model |> noFx
+    NextDict ->
+      let
+        newModel = {model | selectedDict=nextElement model.selectedDict allDicts}
+      in
+        (newModel, getEntries newModel)
+    PrevDict ->
+      let
+        newModel = {model | selectedDict=prevElement model.selectedDict allDicts}
+      in
+        (newModel, getEntries newModel)
     Query "" ->
       {model | query="", entries=[]} |> noFx
     Query query ->
-      ({model | query=query}, getEntries model.selectedDict model.selectedQueryMode query)
+      let
+        newModel = {model | query=query}
+      in
+        (newModel, getEntries newModel)
     ChangeDict dict ->
-      ({model | selectedDict=dict}, getEntries dict model.selectedQueryMode model.query)
+      let
+        newModel = {model | selectedDict=dict}
+      in
+        (newModel, getEntries newModel)
     ChangeQueryMode mode ->
-      ({model | selectedQueryMode=mode}, getEntries model.selectedDict mode model.query)
+      let
+        newModel = {model | selectedQueryMode=mode}
+      in
+        (newModel, getEntries newModel)
     NewEntries (Just entries) ->
       {model | entries=entries} |> noFx
     NewEntries Nothing ->
@@ -51,13 +72,15 @@ view address model =
       pageBody address model
     ]
 
-getEntries : Dictionary -> QueryMode -> String -> Effects Action
-getEntries dict mode query =
-  case query of
+inputs = []
+
+getEntries : Model -> Effects Action
+getEntries model =
+  case model.query of
     "" ->
       Effects.none
-    _ ->
-      Http.get entriesDecoder (apiUrl dict mode query)
+    query ->
+      Http.get entriesDecoder (apiUrl model.selectedDict model.selectedQueryMode query)
         |> Task.toMaybe
         |> Task.map NewEntries
         |> Effects.task

@@ -4,7 +4,10 @@ import Dictionary exposing (..)
 import QueryMode exposing (..)
 
 type Action
-  = Query String
+  = NoOp
+  | NextDict
+  | PrevDict
+  | Query String
   | ChangeQueryMode QueryMode
   | ChangeDict Dictionary
   | NewEntries (Maybe (List Entry))
