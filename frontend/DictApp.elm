@@ -42,7 +42,10 @@ updateModel action model =
     NoOp ->
       (model, [])
     Init (dict, mode, query) ->
-      ({model | initialized=True, selectedDict=dict, selectedQueryMode=mode, query=query}, [GetEntries, SetQueryString])
+      if dict == defaultDict && mode == defaultQueryMode && query == "" then
+        ({model | initialized=True}, [])
+      else
+        ({model | initialized=True, selectedDict=dict, selectedQueryMode=mode, query=query}, [GetEntries, SetQueryString])
     NextDict ->
       let
         dict = nextElement model.selectedDict allDicts
