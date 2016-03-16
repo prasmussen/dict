@@ -52,20 +52,20 @@ dictValue dict =
 toDict : String -> Dictionary
 toDict str =
   case str of
-   "no_uk" -> NO_UK
-   "uk_no" -> UK_NO
-   "no_no" -> NO_NO
-   "uk_uk" -> UK_UK
-   "no_de" -> NO_DE
-   "de_no" -> DE_NO
-   "uk_fr" -> UK_FR
-   "fr_uk" -> FR_UK
-   "uk_es" -> UK_ES
-   "es_uk" -> ES_UK
-   "uk_se" -> UK_SE
-   "se_uk" -> SE_UK
-   "no_me" -> NO_ME
-   _ -> defaultDict
+    "no_uk" -> NO_UK
+    "uk_no" -> UK_NO
+    "no_no" -> NO_NO
+    "uk_uk" -> UK_UK
+    "no_de" -> NO_DE
+    "de_no" -> DE_NO
+    "uk_fr" -> UK_FR
+    "fr_uk" -> FR_UK
+    "uk_es" -> UK_ES
+    "es_uk" -> ES_UK
+    "uk_se" -> UK_SE
+    "se_uk" -> SE_UK
+    "no_me" -> NO_ME
+    _ -> defaultDict
 
 defaultDict : Dictionary
 defaultDict = NO_UK
