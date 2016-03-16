@@ -47,18 +47,19 @@ queryElement address model =
   div [class "query"] [
     p [class "control is-grouped"] [
       span [class "select"] [dictDropdown address model.selectedDict allDicts],
-      queryInputElement address,
+      queryInputElement address model,
       span [class "select"] [queryModeDropdown address model.selectedQueryMode allQueryModes]
     ]
   ]
 
-queryInputElement : Address Action -> Html
-queryInputElement address =
+queryInputElement : Address Action -> Model -> Html
+queryInputElement address model =
   input [
     class "input is-large",
     type' "text",
     placeholder "Query",
     autofocus True,
+    value model.query,
     onInput address Query
   ] []
 

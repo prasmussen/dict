@@ -5,12 +5,16 @@ import QueryMode exposing (..)
 
 type Action
   = NoOp
+  | Init (Dictionary, QueryMode, String)
   | NextDict
   | PrevDict
   | Query String
   | ChangeQueryMode QueryMode
   | ChangeDict Dictionary
   | NewEntries (Maybe (List Entry))
+
+
+type Effect = GetEntries | SetQueryString
 
 type alias Entry = {
     word: String,

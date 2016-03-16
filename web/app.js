@@ -2,9 +2,15 @@
   var TAB_KEY = 9;
 
   // Elm app
-  var app = Elm.fullscreen(Elm.Main, {hotkeys: []});
+  var app = Elm.fullscreen(Elm.Main, {
+    queryString: "",
+    hotkeys: [],
+  });
 
-  // Hotkeys
+  // Initial query parameters event
+  app.ports.queryString.send(location.search);
+
+  // Hotkeys events
   document.addEventListener("keydown", function(e) {
     if (e.keyCode === TAB_KEY) {
       var keys = e.shiftKey ? ["shift", "tab"] : ["tab"];
