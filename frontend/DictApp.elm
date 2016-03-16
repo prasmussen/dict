@@ -20,6 +20,7 @@ import Utils exposing (noFx, nextElement, prevElement)
 
 initialModel : (Model, Effects Action)
 initialModel = {
+    initialized=False,
     query="",
     selectedDict=defaultDict,
     selectedQueryMode=defaultQueryMode,
@@ -41,7 +42,7 @@ updateModel action model =
     NoOp ->
       (model, [])
     Init (dict, mode, query) ->
-      ({model | selectedDict=dict, selectedQueryMode=mode, query=query}, [GetEntries, SetQueryString])
+      ({model | initialized=True, selectedDict=dict, selectedQueryMode=mode, query=query}, [GetEntries, SetQueryString])
     NextDict ->
       let
         dict = nextElement model.selectedDict allDicts
@@ -93,10 +94,14 @@ view address model =
   let
     dicts = List.take 4 allDicts
   in
-    div [] [
-      pageHeader address model dicts,
-      pageBody address model
-    ]
+    case model.initialized of
+      True ->
+        div [] [
+          pageHeader address model dicts,
+          pageBody address model
+        ]
+      False ->
+        div [] []
 
 getEntries : Dictionary -> QueryMode -> String -> Effects Action
 getEntries dict mode query =

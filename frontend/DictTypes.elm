@@ -22,6 +22,7 @@ type alias Entry = {
   }
 
 type alias Model = {
+    initialized: Bool,
     query: String,
     selectedDict: Dictionary,
     selectedQueryMode: QueryMode,
