@@ -8113,6 +8113,149 @@ Elm.List.Extra.make = function (_elm) {
                                    ,lift3: lift3
                                    ,lift4: lift4};
 };
+Elm.Native = Elm.Native || {};
+Elm.Native.History = {};
+Elm.Native.History.make = function(localRuntime){
+
+  localRuntime.Native = localRuntime.Native || {};
+  localRuntime.Native.History = localRuntime.Native.History || {};
+
+  if (localRuntime.Native.History.values){
+    return localRuntime.Native.History.values;
+  }
+
+  var NS = Elm.Native.Signal.make(localRuntime);
+  var Task = Elm.Native.Task.make(localRuntime);
+  var Utils = Elm.Native.Utils.make(localRuntime);
+  var node = window;
+
+  // path : Signal String
+  var path = NS.input('History.path', window.location.pathname);
+
+  // length : Signal Int
+  var length = NS.input('History.length', window.history.length);
+
+  // hash : Signal String
+  var hash = NS.input('History.hash', window.location.hash);
+
+  localRuntime.addListener([path.id, length.id], node, 'popstate', function getPath(event){
+    localRuntime.notify(path.id, window.location.pathname);
+    localRuntime.notify(length.id, window.history.length);
+    localRuntime.notify(hash.id, window.location.hash);
+  });
+
+  localRuntime.addListener([hash.id], node, 'hashchange', function getHash(event){
+    localRuntime.notify(hash.id, window.location.hash);
+  });
+
+  // setPath : String -> Task error ()
+  var setPath = function(urlpath){
+    return Task.asyncFunction(function(callback){
+      setTimeout(function(){
+        localRuntime.notify(path.id, urlpath);
+        window.history.pushState({}, "", urlpath);
+        localRuntime.notify(hash.id, window.location.hash);
+        localRuntime.notify(length.id, window.history.length);
+
+      },0);
+      return callback(Task.succeed(Utils.Tuple0));
+    });
+  };
+
+  // replacePath : String -> Task error ()
+  var replacePath = function(urlpath){
+    return Task.asyncFunction(function(callback){
+      setTimeout(function(){
+        localRuntime.notify(path.id, urlpath);
+        window.history.replaceState({}, "", urlpath);
+        localRuntime.notify(hash.id, window.location.hash);
+        localRuntime.notify(length.id, window.history.length);
+      },0);
+      return callback(Task.succeed(Utils.Tuple0));
+    });
+  };
+
+  // go : Int -> Task error ()
+  var go = function(n){
+    return Task.asyncFunction(function(callback){
+      setTimeout(function(){
+        window.history.go(n);
+        localRuntime.notify(length.id, window.history.length);
+        localRuntime.notify(hash.id, window.location.hash);
+      }, 0);
+      return callback(Task.succeed(Utils.Tuple0));
+    });
+  };
+
+  // back : Task error ()
+  var back = Task.asyncFunction(function(callback){
+    setTimeout(function(){
+      localRuntime.notify(hash.id, window.location.hash);
+      window.history.back();
+      localRuntime.notify(length.id, window.history.length);
+
+    }, 0);
+    return callback(Task.succeed(Utils.Tuple0));
+  });
+
+  // forward : Task error ()
+  var forward = Task.asyncFunction(function(callback){
+    setTimeout(function(){
+      window.history.forward();
+      localRuntime.notify(length.id, window.history.length);
+      localRuntime.notify(hash.id, window.location.hash);
+    }, 0);
+    return callback(Task.succeed(Utils.Tuple0));
+  });
+
+
+
+  return {
+    path        : path,
+    setPath     : setPath,
+    replacePath : replacePath,
+    go          : go,
+    back        : back,
+    forward     : forward,
+    length      : length,
+    hash        : hash
+  };
+
+};
+
+Elm.History = Elm.History || {};
+Elm.History.make = function (_elm) {
+   "use strict";
+   _elm.History = _elm.History || {};
+   if (_elm.History.values) return _elm.History.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$History = Elm.Native.History.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var path = $Native$History.path;
+   var hash = $Native$History.hash;
+   var length = $Native$History.length;
+   var forward = $Native$History.forward;
+   var back = $Native$History.back;
+   var go = $Native$History.go;
+   var replacePath = $Native$History.replacePath;
+   var setPath = $Native$History.setPath;
+   return _elm.History.values = {_op: _op
+                                ,setPath: setPath
+                                ,replacePath: replacePath
+                                ,go: go
+                                ,back: back
+                                ,forward: forward
+                                ,length: length
+                                ,hash: hash
+                                ,path: path};
+};
 Elm.Native.Array = {};
 Elm.Native.Array.make = function(localRuntime) {
 
@@ -13195,15 +13338,19 @@ Elm.DictTypes.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var Model = F4(function (a,b,c,d) {
-      return {query: a
-             ,selectedDict: b
-             ,selectedQueryMode: c
-             ,entries: d};
+   var Model = F6(function (a,b,c,d,e,f) {
+      return {initialized: a
+             ,query: b
+             ,selectedDict: c
+             ,selectedQueryMode: d
+             ,requestId: e
+             ,entries: f};
    });
    var Entry = F2(function (a,b) {
       return {word: a,translations: b};
    });
+   var SetQueryString = {ctor: "SetQueryString"};
+   var GetEntries = {ctor: "GetEntries"};
    var NewEntries = function (a) {
       return {ctor: "NewEntries",_0: a};
    };
@@ -13222,19 +13369,88 @@ Elm.DictTypes.make = function (_elm) {
    var Query = function (a) {    return {ctor: "Query",_0: a};};
    var PrevDict = {ctor: "PrevDict"};
    var NextDict = {ctor: "NextDict"};
+   var Init = function (a) {    return {ctor: "Init",_0: a};};
    var NoOp = {ctor: "NoOp"};
    return _elm.DictTypes.values = {_op: _op
                                   ,NoOp: NoOp
+                                  ,Init: Init
                                   ,NextDict: NextDict
                                   ,PrevDict: PrevDict
                                   ,Query: Query
                                   ,ChangeQueryMode: ChangeQueryMode
                                   ,ChangeDict: ChangeDict
                                   ,NewEntries: NewEntries
+                                  ,GetEntries: GetEntries
+                                  ,SetQueryString: SetQueryString
                                   ,Entry: Entry
                                   ,Model: Model
                                   ,toChangeDictAction: toChangeDictAction
                                   ,toChangeQueryModeAction: toChangeQueryModeAction};
+};
+Elm.QueryParams = Elm.QueryParams || {};
+Elm.QueryParams.make = function (_elm) {
+   "use strict";
+   _elm.QueryParams = _elm.QueryParams || {};
+   if (_elm.QueryParams.values) return _elm.QueryParams.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Http = Elm.Http.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm);
+   var _op = {};
+   var toQueryString = function (params) {
+      var qs = A2($String.join,
+      "&",
+      A2($List.map,
+      function (_p0) {
+         var _p1 = _p0;
+         return A2($Basics._op["++"],
+         _p1._0,
+         A2($Basics._op["++"],"=",_p1._1));
+      },
+      A2($List.map,
+      function (_p2) {
+         var _p3 = _p2;
+         return {ctor: "_Tuple2"
+                ,_0: $Http.uriEncode(_p3._0)
+                ,_1: $Http.uriEncode(_p3._1)};
+      },
+      params)));
+      return _U.eq(qs,"") ? "/" : A2($Basics._op["++"],"/?",qs);
+   };
+   var parseQueryString = function (str) {
+      var empty = {ctor: "_Tuple2",_0: "",_1: ""};
+      var toTuple = function (list) {
+         var _p4 = list;
+         if (_p4.ctor === "::" && _p4._1.ctor === "::" && _p4._1._1.ctor === "[]")
+         {
+               return {ctor: "_Tuple2",_0: _p4._0,_1: _p4._1._0};
+            } else {
+               return empty;
+            }
+      };
+      return A2($List.map,
+      function (_p5) {
+         var _p6 = _p5;
+         return {ctor: "_Tuple2"
+                ,_0: $Http.uriDecode(_p6._0)
+                ,_1: $Http.uriDecode(_p6._1)};
+      },
+      A2($List.filter,
+      F2(function (x,y) {    return !_U.eq(x,y);})(empty),
+      A2($List.map,
+      toTuple,
+      A2($List.map,
+      $String.split("="),
+      A2($String.split,"&",A2($String.dropLeft,1,str))))));
+   };
+   return _elm.QueryParams.values = {_op: _op
+                                    ,parseQueryString: parseQueryString
+                                    ,toQueryString: toQueryString};
 };
 Elm.Utils = Elm.Utils || {};
 Elm.Utils.make = function (_elm) {
@@ -13375,15 +13591,16 @@ Elm.DictHtml.make = function (_elm) {
               ,A2($Utils.onChange,address,$DictTypes.toChangeDictAction)]),
       A2($List.map,dictDropdownOption(selectedDict),dicts));
    });
-   var queryInputElement = function (address) {
+   var queryInputElement = F2(function (address,model) {
       return A2($Html.input,
       _U.list([$Html$Attributes.$class("input is-large")
               ,$Html$Attributes.type$("text")
               ,$Html$Attributes.placeholder("Query")
               ,$Html$Attributes.autofocus(true)
+              ,$Html$Attributes.value(model.query)
               ,A2($Utils.onInput,address,$DictTypes.Query)]),
       _U.list([]));
-   };
+   });
    var queryElement = F2(function (address,model) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("query")]),
@@ -13395,7 +13612,7 @@ Elm.DictHtml.make = function (_elm) {
               address,
               model.selectedDict,
               $Dictionary.allDicts)]))
-              ,queryInputElement(address)
+              ,A2(queryInputElement,address,model)
               ,A2($Html.span,
               _U.list([$Html$Attributes.$class("select")]),
               _U.list([A3(queryModeDropdown,
@@ -13448,13 +13665,16 @@ Elm.DictApp.make = function (_elm) {
    $DictTypes = Elm.DictTypes.make(_elm),
    $Dictionary = Elm.Dictionary.make(_elm),
    $Effects = Elm.Effects.make(_elm),
+   $History = Elm.History.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Http = Elm.Http.make(_elm),
    $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $QueryMode = Elm.QueryMode.make(_elm),
+   $QueryParams = Elm.QueryParams.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Set = Elm.Set.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm),
    $Task = Elm.Task.make(_elm),
@@ -13477,68 +13697,168 @@ Elm.DictApp.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "translations",
    $Json$Decode.list($Json$Decode.string))));
-   var getEntries = function (model) {
-      var _p0 = model.query;
-      if (_p0 === "") {
+   var taskToNoop = function (task) {
+      return A2($Task.onError,
+      A2($Task.map,function (_p0) {    return $DictTypes.NoOp;},task),
+      function (_p1) {
+         return $Task.succeed($DictTypes.NoOp);
+      });
+   };
+   var setQueryString = F3(function (dict,mode,query) {
+      var params = $Set.fromList(_U.list([{ctor: "_Tuple2"
+                                          ,_0: "dict"
+                                          ,_1: $Dictionary.dictValue(dict)}
+                                         ,{ctor: "_Tuple2"
+                                          ,_0: "mode"
+                                          ,_1: $QueryMode.queryModeValue(mode)}
+                                         ,{ctor: "_Tuple2",_0: "query",_1: query}]));
+      var $default = $Set.fromList(_U.list([{ctor: "_Tuple2"
+                                            ,_0: "dict"
+                                            ,_1: $Dictionary.dictValue($Dictionary.defaultDict)}
+                                           ,{ctor: "_Tuple2"
+                                            ,_0: "mode"
+                                            ,_1: $QueryMode.queryModeValue($QueryMode.defaultQueryMode)}
+                                           ,{ctor: "_Tuple2",_0: "query",_1: ""}]));
+      var nonDefaultParams = $Set.toList(A2($Set.diff,
+      params,
+      $default));
+      return $Effects.task(taskToNoop($History.replacePath($QueryParams.toQueryString(nonDefaultParams))));
+   });
+   var getEntries = F4(function (reqId,dict,mode,query) {
+      var _p2 = query;
+      if (_p2 === "") {
             return $Effects.none;
          } else {
             return $Effects.task(A2($Task.map,
-            $DictTypes.NewEntries,
+            function (x) {
+               return $DictTypes.NewEntries({ctor: "_Tuple2"
+                                            ,_0: reqId
+                                            ,_1: x});
+            },
             $Task.toMaybe(A2($Http.get,
             entriesDecoder,
-            A3(apiUrl,model.selectedDict,model.selectedQueryMode,_p0)))));
+            A3(apiUrl,dict,mode,query)))));
          }
-   };
-   var inputs = _U.list([]);
+   });
    var view = F2(function (address,model) {
       var dicts = A2($List.take,4,$Dictionary.allDicts);
-      return A2($Html.div,
-      _U.list([]),
-      _U.list([A3($DictHtml.pageHeader,address,model,dicts)
-              ,A2($DictHtml.pageBody,address,model)]));
+      var _p3 = model.initialized;
+      if (_p3 === true) {
+            return A2($Html.div,
+            _U.list([]),
+            _U.list([A3($DictHtml.pageHeader,address,model,dicts)
+                    ,A2($DictHtml.pageBody,address,model)]));
+         } else {
+            return A2($Html.div,_U.list([]),_U.list([]));
+         }
    });
-   var update = F2(function (action,model) {
-      var _p1 = action;
-      switch (_p1.ctor)
-      {case "NoOp": return $Utils.noFx(model);
-         case "NextDict": var newModel = _U.update(model,
-           {selectedDict: A2($Utils.nextElement,
+   var prepareEffect = F2(function (model,effect) {
+      var reqId = model.requestId;
+      var query = model.query;
+      var mode = model.selectedQueryMode;
+      var dict = model.selectedDict;
+      var _p4 = effect;
+      if (_p4.ctor === "GetEntries") {
+            return A4(getEntries,reqId,dict,mode,query);
+         } else {
+            return A3(setQueryString,dict,mode,query);
+         }
+   });
+   var prepareEffects = F2(function (model,effects) {
+      var _p5 = effects;
+      if (_p5.ctor === "[]") {
+            return $Effects.none;
+         } else {
+            return $Effects.batch(A2($List.map,
+            prepareEffect(model),
+            effects));
+         }
+   });
+   var updateModel = F2(function (action,model) {
+      var _p6 = action;
+      switch (_p6.ctor)
+      {case "NoOp": return {ctor: "_Tuple2"
+                           ,_0: model
+                           ,_1: _U.list([])};
+         case "Init": var _p9 = _p6._0._2;
+           var _p8 = _p6._0._1;
+           var _p7 = _p6._0._0;
+           return _U.eq(_p7,$Dictionary.defaultDict) && (_U.eq(_p8,
+           $QueryMode.defaultQueryMode) && _U.eq(_p9,
+           "")) ? {ctor: "_Tuple2"
+                  ,_0: _U.update(model,{initialized: true})
+                  ,_1: _U.list([])} : {ctor: "_Tuple2"
+                                      ,_0: _U.update(model,
+                                      {initialized: true
+                                      ,selectedDict: _p7
+                                      ,selectedQueryMode: _p8
+                                      ,query: _p9})
+                                      ,_1: _U.list([$DictTypes.GetEntries
+                                                   ,$DictTypes.SetQueryString])};
+         case "NextDict": var dict = A2($Utils.nextElement,
            model.selectedDict,
-           $Dictionary.allDicts)});
-           return {ctor: "_Tuple2",_0: newModel,_1: getEntries(newModel)};
-         case "PrevDict": var newModel = _U.update(model,
-           {selectedDict: A2($Utils.prevElement,
+           $Dictionary.allDicts);
+           return {ctor: "_Tuple2"
+                  ,_0: _U.update(model,{selectedDict: dict})
+                  ,_1: _U.list([$DictTypes.GetEntries
+                               ,$DictTypes.SetQueryString])};
+         case "PrevDict": var dict = A2($Utils.prevElement,
            model.selectedDict,
-           $Dictionary.allDicts)});
-           return {ctor: "_Tuple2",_0: newModel,_1: getEntries(newModel)};
-         case "Query": if (_p1._0 === "") {
-                 return $Utils.noFx(_U.update(model,
-                 {query: "",entries: _U.list([])}));
+           $Dictionary.allDicts);
+           return {ctor: "_Tuple2"
+                  ,_0: _U.update(model,{selectedDict: dict})
+                  ,_1: _U.list([$DictTypes.GetEntries
+                               ,$DictTypes.SetQueryString])};
+         case "ChangeDict": return {ctor: "_Tuple2"
+                                   ,_0: _U.update(model,{selectedDict: _p6._0})
+                                   ,_1: _U.list([$DictTypes.GetEntries
+                                                ,$DictTypes.SetQueryString])};
+         case "ChangeQueryMode": return {ctor: "_Tuple2"
+                                        ,_0: _U.update(model,{selectedQueryMode: _p6._0})
+                                        ,_1: _U.list([$DictTypes.GetEntries
+                                                     ,$DictTypes.SetQueryString])};
+         case "Query": if (_p6._0 === "") {
+                 return {ctor: "_Tuple2"
+                        ,_0: _U.update(model,
+                        {query: "",entries: _U.list([]),requestId: model.requestId + 1})
+                        ,_1: _U.list([$DictTypes.SetQueryString])};
               } else {
-                 var newModel = _U.update(model,{query: _p1._0});
-                 return {ctor: "_Tuple2",_0: newModel,_1: getEntries(newModel)};
+                 return {ctor: "_Tuple2"
+                        ,_0: _U.update(model,{query: _p6._0})
+                        ,_1: _U.list([$DictTypes.GetEntries
+                                     ,$DictTypes.SetQueryString])};
               }
-         case "ChangeDict": var newModel = _U.update(model,
-           {selectedDict: _p1._0});
-           return {ctor: "_Tuple2",_0: newModel,_1: getEntries(newModel)};
-         case "ChangeQueryMode": var newModel = _U.update(model,
-           {selectedQueryMode: _p1._0});
-           return {ctor: "_Tuple2",_0: newModel,_1: getEntries(newModel)};
-         default: if (_p1._0.ctor === "Just") {
-                 return $Utils.noFx(_U.update(model,{entries: _p1._0._0}));
+         default: if (_p6._0._1.ctor === "Just") {
+                 return _U.eq(_p6._0._0,model.requestId) ? {ctor: "_Tuple2"
+                                                           ,_0: _U.update(model,{entries: _p6._0._1._0})
+                                                           ,_1: _U.list([])} : {ctor: "_Tuple2",_0: model,_1: _U.list([])};
               } else {
-                 return $Utils.noFx(_U.update(model,{entries: _U.list([])}));
+                 return _U.eq(_p6._0._0,model.requestId) ? {ctor: "_Tuple2"
+                                                           ,_0: _U.update(model,{entries: _U.list([])})
+                                                           ,_1: _U.list([])} : {ctor: "_Tuple2",_0: model,_1: _U.list([])};
               }}
    });
-   var initialModel = $Utils.noFx({query: ""
+   var update = F2(function (action,model) {
+      var _p10 = A2(updateModel,action,model);
+      var updatedModel = _p10._0;
+      var effects = _p10._1;
+      var newModel = A2($List.member,
+      $DictTypes.GetEntries,
+      effects) ? _U.update(updatedModel,
+      {requestId: model.requestId + 1}) : updatedModel;
+      var effect = A2(prepareEffects,newModel,effects);
+      return {ctor: "_Tuple2",_0: newModel,_1: effect};
+   });
+   var initialModel = $Utils.noFx({initialized: false
+                                  ,query: ""
                                   ,selectedDict: $Dictionary.defaultDict
                                   ,selectedQueryMode: $QueryMode.defaultQueryMode
+                                  ,requestId: 0
                                   ,entries: _U.list([])});
    return _elm.DictApp.values = {_op: _op
                                 ,initialModel: initialModel
                                 ,update: update
-                                ,view: view
-                                ,inputs: inputs};
+                                ,view: view};
 };
 Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
@@ -13550,10 +13870,13 @@ Elm.Main.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $DictApp = Elm.DictApp.make(_elm),
    $DictTypes = Elm.DictTypes.make(_elm),
+   $Dictionary = Elm.Dictionary.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $Html = Elm.Html.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $QueryMode = Elm.QueryMode.make(_elm),
+   $QueryParams = Elm.QueryParams.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $StartApp = Elm.StartApp.make(_elm),
@@ -13583,6 +13906,35 @@ Elm.Main.make = function (_elm) {
       } while (false);
       return $DictTypes.NoOp;
    };
+   var queryParametersToAction = function (params) {
+      var filterMap = F3(function (key,f,$default) {
+         return A2($Maybe.withDefault,
+         $default,
+         A2($Maybe.map,
+         f,
+         A2($Maybe.map,
+         $Basics.snd,
+         $List.head(A2($List.filter,
+         function (_p1) {
+            var _p2 = _p1;
+            return _U.eq(_p2._0,key);
+         },
+         params)))));
+      });
+      var dict = A3(filterMap,
+      "dict",
+      $Dictionary.toDict,
+      $Dictionary.defaultDict);
+      var mode = A3(filterMap,
+      "mode",
+      $QueryMode.toQueryMode,
+      $QueryMode.defaultQueryMode);
+      var query = A3(filterMap,"query",$Basics.identity,"");
+      return $DictTypes.Init({ctor: "_Tuple3"
+                             ,_0: dict
+                             ,_1: mode
+                             ,_2: query});
+   };
    var hotkeys = Elm.Native.Port.make(_elm).inboundSignal("hotkeys",
    "List String",
    function (v) {
@@ -13591,13 +13943,21 @@ Elm.Main.make = function (_elm) {
          v);
       })) : _U.badPort("an array",v);
    });
-   var portInputs = A2($Signal.map,hotkeyToAction,hotkeys);
+   var hotkeysInput = A2($Signal.map,hotkeyToAction,hotkeys);
+   var queryString = Elm.Native.Port.make(_elm).inboundSignal("queryString",
+   "String",
+   function (v) {
+      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",
+      v);
+   });
+   var queryStringInput = A2($Signal.map,
+   queryParametersToAction,
+   A2($Signal.map,$QueryParams.parseQueryString,queryString));
+   var portInputs = _U.list([hotkeysInput,queryStringInput]);
    var app = $StartApp.start({init: $DictApp.initialModel
                              ,view: $DictApp.view
                              ,update: $DictApp.update
-                             ,inputs: A2($Basics._op["++"],
-                             $DictApp.inputs,
-                             _U.list([portInputs]))});
+                             ,inputs: portInputs});
    var main = app.html;
    var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",
    app.tasks);
@@ -13605,5 +13965,8 @@ Elm.Main.make = function (_elm) {
                              ,app: app
                              ,main: main
                              ,portInputs: portInputs
+                             ,queryParametersToAction: queryParametersToAction
+                             ,queryStringInput: queryStringInput
+                             ,hotkeysInput: hotkeysInput
                              ,hotkeyToAction: hotkeyToAction};
 };
