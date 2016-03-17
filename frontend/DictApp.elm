@@ -24,6 +24,7 @@ initialModel = {
     query="",
     selectedDict=defaultDict,
     selectedQueryMode=defaultQueryMode,
+    requestId=0,
     entries=[]
   } |> noFx
 
@@ -31,7 +32,12 @@ initialModel = {
 update : Action -> Model -> (Model, Effects Action)
 update action model =
   let
-    (newModel, effects) = updateModel action model
+    (updatedModel, effects) = updateModel action model
+    newModel =
+      if List.member GetEntries effects then
+        {updatedModel | requestId=model.requestId + 1}
+      else
+        updatedModel
     effect = prepareEffects newModel effects
   in
     (newModel, effect)
@@ -61,13 +67,19 @@ updateModel action model =
     ChangeQueryMode mode ->
       ({model | selectedQueryMode=mode}, [GetEntries, SetQueryString])
     Query "" ->
-      ({model | query="", entries=[]}, [SetQueryString])
+      ({model | query="", entries=[], requestId=model.requestId + 1}, [SetQueryString])
     Query query ->
       ({model | query=query}, [GetEntries, SetQueryString])
-    NewEntries (Just entries) ->
-      ({model | entries=entries}, [])
-    NewEntries Nothing ->
-      ({model | entries=[]}, [])
+    NewEntries (id, Just entries) ->
+      if id == model.requestId then
+        ({model | entries=entries}, [])
+      else
+        (model, [])
+    NewEntries (id, Nothing) ->
+      if id == model.requestId then
+        ({model | entries=[]}, [])
+      else
+        (model, [])
 
 prepareEffects : Model -> List Effect -> Effects Action
 prepareEffects model effects =
@@ -85,10 +97,11 @@ prepareEffect model effect =
     dict = model.selectedDict
     mode = model.selectedQueryMode
     query = model.query
+    reqId = model.requestId
   in
     case effect of
       GetEntries ->
-        getEntries dict mode query
+        getEntries reqId dict mode query
       SetQueryString ->
         setQueryString dict mode query
 
@@ -106,15 +119,15 @@ view address model =
       False ->
         div [] []
 
-getEntries : Dictionary -> QueryMode -> String -> Effects Action
-getEntries dict mode query =
+getEntries : Int -> Dictionary -> QueryMode -> String -> Effects Action
+getEntries reqId dict mode query =
   case query of
     "" ->
       Effects.none
     _ ->
       Http.get entriesDecoder (apiUrl dict mode query)
         |> Task.toMaybe
-        |> Task.map NewEntries
+        |> Task.map (\x -> NewEntries (reqId, x))
         |> Effects.task
 
 setQueryString : Dictionary -> QueryMode -> String -> Effects Action

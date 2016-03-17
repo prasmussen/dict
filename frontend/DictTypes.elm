@@ -11,7 +11,7 @@ type Action
   | Query String
   | ChangeQueryMode QueryMode
   | ChangeDict Dictionary
-  | NewEntries (Maybe (List Entry))
+  | NewEntries (Int, Maybe (List Entry))
 
 
 type Effect = GetEntries | SetQueryString
@@ -26,6 +26,7 @@ type alias Model = {
     query: String,
     selectedDict: Dictionary,
     selectedQueryMode: QueryMode,
+    requestId: Int,
     entries: List Entry
   }
 
