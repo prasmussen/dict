@@ -2,6 +2,7 @@ module DictApp (initialModel, update, view) where
 
 import Html exposing (Html, div)
 import String
+import Set
 import Signal exposing (Address)
 import Task exposing (Task)
 import Json.Decode as Json exposing ((:=))
@@ -133,14 +134,22 @@ getEntries reqId dict mode query =
 setQueryString : Dictionary -> QueryMode -> String -> Effects Action
 setQueryString dict mode query =
   let
+    default =
+      Set.fromList [
+        ("dict", dictValue defaultDict),
+        ("mode", queryModeValue defaultQueryMode),
+        ("query", "")
+      ]
     params =
-      [
+      Set.fromList [
         ("dict", dictValue dict),
         ("mode", queryModeValue mode),
         ("query", query)
       ]
+    nonDefaultParams =
+      Set.diff params default |> Set.toList
   in
-    History.replacePath (toQueryString params)
+    History.replacePath (toQueryString nonDefaultParams)
       |> taskToNoop
       |> Effects.task
 

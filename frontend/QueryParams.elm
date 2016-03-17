@@ -29,9 +29,11 @@ toQueryString params =
   let
     qs =
       params
-        |> List.filter (\(k, v) -> v /= "")
         |> List.map (\(k, v) -> (uriEncode k, uriEncode v))
         |> List.map (\(k, v) -> k ++ "=" ++ v)
         |> String.join "&"
   in
-    "/?" ++ qs
+    if qs == "" then
+      "/"
+    else
+      "/?" ++ qs
