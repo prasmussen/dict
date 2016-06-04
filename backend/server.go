@@ -81,10 +81,13 @@ func main() {
 
     http.Handle("/", http.FileServer(http.Dir("./web/")))
     http.Handle("/api/", p)
-    httpsRedirector := http.RedirectHandler("https://d.rasm.se", http.StatusMovedPermanently)
+
+    httpsRedirector := func (w http.ResponseWriter, req *http.Request) {
+        http.Redirect(w, req, "https://d.rasm.se" + req.RequestURI, http.StatusMovedPermanently)
+    }
 
     log.Println("Listening on port 80 and 443")
-    go http.ListenAndServe(":80", httpsRedirector)
+    go http.ListenAndServe(":80", http.HandlerFunc(httpsRedirector))
     err = http.ListenAndServeTLS(":443", cfg.Cert, cfg.Privkey, nil)
     if err != nil {
         log.Fatalln("ListenAndServe: ", err)
