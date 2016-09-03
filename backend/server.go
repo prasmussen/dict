@@ -4,6 +4,7 @@ import (
     "os"
     "log"
     "time"
+    "strings"
     "net/http"
     "encoding/json"
     "github.com/bmizerany/pat"
@@ -82,8 +83,17 @@ func main() {
     http.Handle("/", http.FileServer(http.Dir("./web/")))
     http.Handle("/api/", p)
 
+    // Redirect http requests to https
     httpsRedirector := func (w http.ResponseWriter, req *http.Request) {
-        http.Redirect(w, req, "https://d.rasm.se" + req.RequestURI, http.StatusMovedPermanently)
+        uri := req.RequestURI
+
+        // Don't redirect lets encrypt requests
+        if strings.HasPrefix(uri, "/.well-known") {
+            http.DefaultServeMux.ServeHTTP(w, req)
+            return
+        }
+
+        http.Redirect(w, req, "https://d.rasm.se" + uri, http.StatusMovedPermanently)
     }
 
     log.Println("Listening on port 80 and 443")
