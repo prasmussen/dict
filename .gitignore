@@ -29,9 +29,8 @@ _testmain.go
 dictionaries
 *.json
 
-# Server binary
-server
-backend
+# Binary
+dict-backend
 
 elm-stuff
 ._*
