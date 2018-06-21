@@ -8,7 +8,6 @@ import (
     "net/http"
     "encoding/json"
     "github.com/bmizerany/pat"
-    "./kolekto"
 )
 
 type Config struct {
@@ -47,7 +46,7 @@ func main() {
     }
 
     log.Printf("Connecting to mongodb: %s\n", cfg.Mongodb)
-    k, err := kolekto.New(cfg.Mongodb)
+    mongoClient, err := NewMongoClient(cfg.Mongodb)
     if err != nil {
         log.Fatalln(err)
     }
@@ -57,7 +56,7 @@ func main() {
     p := pat.New()
 
     p.Get("/api/dictionaries", http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-        dicts, err := k.Dictionaries()
+        dicts, err := mongoClient.Dictionaries()
         if err != nil {
             log.Println(err)
         }
@@ -73,7 +72,7 @@ func main() {
         query := req.URL.Query().Get(":query")
 
         // Find matches and return response
-        entries, _ := k.Find(dict, query, 90)
+        entries, _ := mongoClient.Find(dict, query, 90)
         jsonResponse(res, entries)
 
         // Print out used time
