@@ -4,17 +4,11 @@ import (
     "os"
     "log"
     "time"
-    "strings"
     "net/http"
     "encoding/json"
     "github.com/bmizerany/pat"
 )
 
-type Config struct {
-    Cert string
-    Privkey string
-    Mongodb string
-}
 
 func jsonResponse(res http.ResponseWriter, i interface{}) {
     res.Header().Set("Content-Type", "application/json")
@@ -24,29 +18,19 @@ func jsonResponse(res http.ResponseWriter, i interface{}) {
     }
 }
 
-func parseConfig(fname string) (*Config, error) {
-    f, err := os.Open(fname)
-    if err != nil {
-        return nil, err
-    }
-    defer f.Close()
-
-    var cfg *Config
-    if err := json.NewDecoder(f).Decode(&cfg); err != nil {
-        return nil, err
-    }
-
-    return cfg, nil
-}
-
 func main() {
-    cfg, err := parseConfig("config.json")
-    if err != nil {
-        log.Fatalln(err)
+    dbUrl := os.Getenv("DB_URL")
+    if dbUrl == "" {
+        log.Fatalln("Missing DB_URL environment variable")
     }
 
-    log.Printf("Connecting to mongodb: %s\n", cfg.Mongodb)
-    mongoClient, err := NewMongoClient(cfg.Mongodb)
+    listenAddr := os.Getenv("LISTEN_ADDR")
+    if listenAddr == "" {
+        listenAddr = ":80"
+    }
+
+    log.Printf("Connecting to mongodb: %s\n", dbUrl)
+    mongoClient, err := NewMongoClient(dbUrl)
     if err != nil {
         log.Fatalln(err)
     }
@@ -82,22 +66,9 @@ func main() {
     http.Handle("/", http.FileServer(http.Dir("./web/")))
     http.Handle("/api/", p)
 
-    // Redirect http requests to https
-    httpsRedirector := func (w http.ResponseWriter, req *http.Request) {
-        uri := req.RequestURI
 
-        // Don't redirect lets encrypt requests
-        if strings.HasPrefix(uri, "/.well-known") {
-            http.DefaultServeMux.ServeHTTP(w, req)
-            return
-        }
-
-        http.Redirect(w, req, "https://d.rasm.se" + uri, http.StatusMovedPermanently)
-    }
-
-    log.Println("Listening on port 80 and 443")
-    go http.ListenAndServe(":80", http.HandlerFunc(httpsRedirector))
-    err = http.ListenAndServeTLS(":443", cfg.Cert, cfg.Privkey, nil)
+    log.Println("Listening on ", listenAddr)
+    err = http.ListenAndServe(listenAddr, nil)
     if err != nil {
         log.Fatalln("ListenAndServe: ", err)
     }

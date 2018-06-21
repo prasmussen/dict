@@ -31,6 +31,7 @@ dictionaries
 
 # Server binary
 server
+backend
 
 elm-stuff
 ._*
