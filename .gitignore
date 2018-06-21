@@ -30,7 +30,8 @@ dictionaries
 *.json
 
 # Binary
-dict-backend
+dict-backend/dict-backend
+result-bin
 
 elm-stuff
 ._*
