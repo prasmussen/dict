@@ -1,5 +1,0 @@
-{
-  "mongodb": "localhost:27017",
-  "cert": "cert",
-  "privkey": "privkey"
-}
