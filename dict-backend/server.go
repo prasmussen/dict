@@ -19,6 +19,11 @@ func jsonResponse(res http.ResponseWriter, i interface{}) {
 }
 
 func main() {
+    staticPath := os.Getenv("STATIC_PATH")
+    if staticPath == "" {
+        log.Fatalln("Missing STATIC_PATH environment variable")
+    }
+
     dbUrl := os.Getenv("DB_URL")
     if dbUrl == "" {
         log.Fatalln("Missing DB_URL environment variable")
@@ -63,7 +68,7 @@ func main() {
         log.Printf("The query (%s) took %v\n", query, time.Now().Sub(start))
     }))
 
-    http.Handle("/", http.FileServer(http.Dir("./web/")))
+    http.Handle("/", http.FileServer(http.Dir(staticPath)))
     http.Handle("/api/", p)
 
 
