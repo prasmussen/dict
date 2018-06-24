@@ -6,6 +6,7 @@ import DictApp.Entry as Entry
 import DictApp.Program as Program
 import DictApp.QueryMode as QueryMode
 import Dom
+import Erl
 import Erl.Query as Query
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -133,17 +134,21 @@ update msg model =
         SetDictionary dict ->
             { model | dictionary = dict }
                 |> loadEntries
+                |> updateUrl
 
         SetQueryMode queryMode ->
             { model | queryMode = queryMode }
                 |> loadEntries
+                |> updateUrl
 
         SetSearchQuery searchQuery ->
             if String.isEmpty searchQuery then
                 ( { model | searchQuery = "", entries = [] }, Cmd.none )
+                    |> updateUrl
             else
                 { model | searchQuery = searchQuery }
                     |> loadEntries
+                    |> updateUrl
 
         LoadEntries result ->
             case result of
@@ -161,6 +166,30 @@ loadEntries model =
             Entry.getEntries model.dictionary model.queryMode model.searchQuery
     in
     ( model, Http.send LoadEntries req )
+
+
+updateUrl : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+updateUrl ( model, cmd ) =
+    let
+        modifyUrl =
+            Navigation.modifyUrl (toUrlQuery model)
+    in
+    ( model, Cmd.batch [ cmd, modifyUrl ] )
+
+
+toUrlQuery : Model -> String
+toUrlQuery model =
+    let
+        url =
+            Erl.new
+
+        query =
+            [ ( "dict", Dictionary.toStringValue model.dictionary )
+            , ( "mode", QueryMode.toStringValue model.queryMode )
+            , ( "query", model.searchQuery )
+            ]
+    in
+    { url | query = query } |> Erl.toString
 
 
 view : Model -> Html Msg
