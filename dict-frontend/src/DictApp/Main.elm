@@ -51,7 +51,15 @@ type Msg
     | SetDictionary Dictionary.Dictionary
     | SetQueryMode QueryMode.QueryMode
     | SetSearchQuery String
-    | LoadEntries String (Result Http.Error (List Entry.Entry))
+    | LoadEntries SearchQuery EntriesResult
+
+
+type alias SearchQuery =
+    String
+
+
+type alias EntriesResult =
+    Result Http.Error (List Entry.Entry)
 
 
 main =
