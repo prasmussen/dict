@@ -51,7 +51,7 @@ type Msg
     | SetDictionary Dictionary.Dictionary
     | SetQueryMode QueryMode.QueryMode
     | SetSearchQuery String
-    | LoadEntries (Result Http.Error (List Entry.Entry))
+    | LoadEntries String (Result Http.Error (List Entry.Entry))
 
 
 main =
@@ -156,13 +156,16 @@ update msg model =
                     |> loadEntries
                     |> updateUrl
 
-        LoadEntries result ->
-            case result of
-                Ok entries ->
-                    ( { model | entries = entries }, Cmd.none )
+        LoadEntries searchQuery result ->
+            if searchQuery /= model.searchQuery then
+                ( model, Cmd.none )
+            else
+                case result of
+                    Ok entries ->
+                        ( { model | entries = entries }, Cmd.none )
 
-                Err err ->
-                    ( model, Cmd.none )
+                    Err err ->
+                        ( model, Cmd.none )
 
 
 loadEntries : Model -> ( Model, Cmd Msg )
@@ -174,7 +177,7 @@ loadEntries model =
     if String.isEmpty model.searchQuery then
         ( model, Cmd.none )
     else
-        ( model, Http.send LoadEntries req )
+        ( model, Http.send (LoadEntries model.searchQuery) req )
 
 
 updateUrl : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
