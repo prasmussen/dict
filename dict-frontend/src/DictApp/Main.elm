@@ -4,6 +4,8 @@ import Dict
 import DictApp.AppFlags as AppFlags
 import DictApp.Dictionary as Dictionary
 import DictApp.Entry as Entry
+import DictApp.List as ListE
+import DictApp.Port as Port
 import DictApp.Program as Program
 import DictApp.QueryMode as QueryMode
 import Dom
@@ -33,6 +35,8 @@ type Msg
     | SetDictionary Dictionary.Dictionary
     | SetQueryMode QueryMode.QueryMode
     | SetSearchQuery String
+    | NextDict
+    | PrevDict
     | LoadEntries SearchQuery EntriesResult
 
 
@@ -100,7 +104,10 @@ init appFlags location =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Sub.batch
+        [ Port.nextDict (\_ -> NextDict)
+        , Port.prevDict (\_ -> PrevDict)
+        ]
 
 
 onChangeQueryMode : (QueryMode.QueryMode -> msg) -> Attribute msg
@@ -145,6 +152,24 @@ update msg model =
                 { model | searchQuery = searchQuery }
                     |> loadEntries
                     |> updateUrl
+
+        NextDict ->
+            let
+                dict =
+                    ListE.nextElement model.dictionary Dictionary.allDicts
+            in
+            { model | dictionary = dict }
+                |> loadEntries
+                |> updateUrl
+
+        PrevDict ->
+            let
+                dict =
+                    ListE.prevElement model.dictionary Dictionary.allDicts
+            in
+            { model | dictionary = dict }
+                |> loadEntries
+                |> updateUrl
 
         LoadEntries searchQuery result ->
             if searchQuery /= model.searchQuery then
