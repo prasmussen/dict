@@ -1,6 +1,7 @@
 module DictApp.Main exposing (main)
 
 import Dict
+import DictApp.AppFlags as AppFlags
 import DictApp.Dictionary as Dictionary
 import DictApp.Entry as Entry
 import DictApp.Program as Program
@@ -19,31 +20,12 @@ import Task
 
 
 type alias Model =
-    { appFlags : AppFlags
+    { appFlags : AppFlags.AppFlags
     , dictionary : Dictionary.Dictionary
     , queryMode : QueryMode.QueryMode
     , searchQuery : String
     , entries : List Entry.Entry
     }
-
-
-type alias AppFlags =
-    { dictionary : Dictionary.Dictionary
-    , queryMode : QueryMode.QueryMode
-    , searchQuery : String
-    }
-
-
-
--- TODO: move to AppFlags
-
-
-decodeAppFlags : JD.Decoder AppFlags
-decodeAppFlags =
-    JD.map3 AppFlags
-        (JD.field "dictionary" Dictionary.decodeDictionary)
-        (JD.field "queryMode" QueryMode.decodeQueryMode)
-        (JD.field "queryString" JD.string)
 
 
 type Msg
@@ -70,10 +52,10 @@ main =
         , update = update
         , view = view
         }
-        decodeAppFlags
+        AppFlags.decodeAppFlags
 
 
-init : AppFlags -> Navigation.Location -> ( Model, Cmd Msg )
+init : AppFlags.AppFlags -> Navigation.Location -> ( Model, Cmd Msg )
 init appFlags location =
     let
         initialModel =
