@@ -2,20 +2,22 @@
   var TAB_KEY = 9;
 
   // Elm app
-  var app = Elm.fullscreen(Elm.Main, {
+  var app = Elm.DictApp.Main.fullscreen({
+    dictionary: "no_uk",
+    queryMode: "prefix",
     queryString: "",
-    hotkeys: [],
   });
 
-  // Initial query parameters event
-  app.ports.queryString.send(location.search);
-
-  // Hotkeys events
+  // Global key events
   document.addEventListener("keydown", function(e) {
     if (e.keyCode === TAB_KEY) {
-      var keys = e.shiftKey ? ["shift", "tab"] : ["tab"];
-      app.ports.hotkeys.send(keys);
       e.preventDefault();
+
+      if (e.shiftKey) {
+          app.ports.prevDict.send({});
+      } else {
+          app.ports.nextDict.send({});
+      }
     }
   });
 
