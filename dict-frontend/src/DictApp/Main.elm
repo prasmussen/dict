@@ -19,7 +19,8 @@ import Task
 
 
 type alias Model =
-    { dictionary : Dictionary.Dictionary
+    { appFlags : AppFlags
+    , dictionary : Dictionary.Dictionary
     , queryMode : QueryMode.QueryMode
     , searchQuery : String
     , entries : List Entry.Entry
@@ -68,7 +69,8 @@ init : AppFlags -> Navigation.Location -> ( Model, Cmd Msg )
 init appFlags location =
     let
         initialModel =
-            { dictionary = dictionary
+            { appFlags = appFlags
+            , dictionary = dictionary
             , queryMode = queryMode
             , searchQuery = searchQuery
             , entries = []
@@ -90,7 +92,7 @@ init appFlags location =
                 |> Maybe.withDefault appFlags.dictionary
 
         queryMode =
-            Dict.get "queryMode" queryDict
+            Dict.get "mode" queryDict
                 |> Maybe.map QueryMode.fromString
                 |> MaybeE.join
                 |> Maybe.withDefault appFlags.queryMode
@@ -103,6 +105,7 @@ init appFlags location =
         ( initialModel, Cmd.none )
     else
         loadEntries initialModel
+            |> updateUrl
 
 
 subscriptions : Model -> Sub Msg
@@ -168,7 +171,10 @@ loadEntries model =
         req =
             Entry.getEntries model.dictionary model.queryMode model.searchQuery
     in
-    ( model, Http.send LoadEntries req )
+    if String.isEmpty model.searchQuery then
+        ( model, Cmd.none )
+    else
+        ( model, Http.send LoadEntries req )
 
 
 updateUrl : ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
@@ -186,13 +192,45 @@ toUrlQuery model =
         url =
             Erl.new
 
+        ignoreEqual default value =
+            if default == value then
+                Nothing
+            else
+                Just value
+
+        maybeDict =
+            ignoreEqual model.appFlags.dictionary model.dictionary
+                |> Maybe.map Dictionary.toStringValue
+
+        maybeQueryMode =
+            ignoreEqual model.appFlags.queryMode model.queryMode
+                |> Maybe.map QueryMode.toStringValue
+
+        maybeSearchQuery =
+            ignoreEqual "" model.searchQuery
+
+        keepJust ( key, maybeValue ) =
+            case maybeValue of
+                Just value ->
+                    Just ( key, value )
+
+                Nothing ->
+                    Nothing
+
         query =
-            [ ( "dict", Dictionary.toStringValue model.dictionary )
-            , ( "mode", QueryMode.toStringValue model.queryMode )
-            , ( "query", model.searchQuery )
-            ]
+            List.filterMap keepJust
+                [ ( "dict", maybeDict )
+                , ( "mode", maybeQueryMode )
+                , ( "query", maybeSearchQuery )
+                ]
     in
-    { url | query = query } |> Erl.toString
+    case query of
+        [] ->
+            "/"
+
+        _ ->
+            { url | query = query }
+                |> Erl.toString
 
 
 view : Model -> Html Msg
