@@ -64,7 +64,7 @@ main =
         decodeAppFlags
 
 
-init : AppFlags -> Navigation.Location -> ( Result String Model, Cmd Msg )
+init : AppFlags -> Navigation.Location -> ( Model, Cmd Msg )
 init appFlags location =
     let
         initialModel =
@@ -99,7 +99,10 @@ init appFlags location =
             Dict.get "query" queryDict
                 |> Maybe.withDefault appFlags.searchQuery
     in
-    ( Ok initialModel, Cmd.none )
+    if String.isEmpty searchQuery then
+        ( initialModel, Cmd.none )
+    else
+        loadEntries initialModel
 
 
 subscriptions : Model -> Sub Msg

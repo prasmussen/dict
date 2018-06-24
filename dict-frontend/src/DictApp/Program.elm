@@ -8,7 +8,7 @@ import Navigation exposing (Location)
 programWithFlags :
     (Location -> msg)
     ->
-        { init : options -> Location -> ( Result String model, Cmd msg )
+        { init : options -> Location -> ( model, Cmd msg )
         , update : msg -> model -> ( model, Cmd msg )
         , subscriptions : model -> Sub msg
         , view : model -> Html msg
@@ -21,7 +21,11 @@ programWithFlags onNavigation { init, update, subscriptions, view } decodeFlags 
         initWrapper flags location =
             case JD.decodeValue decodeFlags flags of
                 Ok options ->
-                    init options location
+                    let
+                        ( model, cmd ) =
+                            init options location
+                    in
+                    ( Ok model, cmd )
 
                 Err err ->
                     ( Err err, Cmd.none )
