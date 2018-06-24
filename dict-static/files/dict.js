@@ -12804,10 +12804,6 @@ var _user$project$DictApp_Dictionary$toStringValue = function (dict) {
 			return 'no_me';
 	}
 };
-var _user$project$DictApp_Dictionary$encodeDictionary = function (dictionary) {
-	return _elm_lang$core$Json_Encode$string(
-		_user$project$DictApp_Dictionary$toStringValue(dictionary));
-};
 var _user$project$DictApp_Dictionary$toStringLabel = function (dict) {
 	var _p1 = dict;
 	switch (_p1.ctor) {
@@ -12973,10 +12969,6 @@ var _user$project$DictApp_QueryMode$toStringValue = function (mode) {
 		default:
 			return 'regex';
 	}
-};
-var _user$project$DictApp_QueryMode$encodeQueryMode = function (queryMode) {
-	return _elm_lang$core$Json_Encode$string(
-		_user$project$DictApp_QueryMode$toStringValue(queryMode));
 };
 var _user$project$DictApp_QueryMode$toStringLabel = function (mode) {
 	var _p2 = mode;
