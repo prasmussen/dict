@@ -1,7 +1,6 @@
 module DictApp.Dictionary exposing (..)
 
 import Json.Decode as JD
-import Json.Encode as JE
 
 
 type Dictionary
@@ -182,8 +181,3 @@ decodeDictionary =
                     JD.fail <| "Unknown dictionary: " ++ str
     in
     JD.andThen decode JD.string
-
-
-encodeDictionary : Dictionary -> JE.Value
-encodeDictionary dictionary =
-    JE.string <| toStringValue dictionary

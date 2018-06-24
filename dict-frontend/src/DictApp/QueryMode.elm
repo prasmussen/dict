@@ -1,7 +1,6 @@
 module DictApp.QueryMode exposing (..)
 
 import Json.Decode as JD
-import Json.Encode as JE
 
 
 type QueryMode
@@ -82,8 +81,3 @@ decodeQueryMode =
                     JD.fail <| "Unknown queryMode: " ++ str
     in
     JD.andThen decode JD.string
-
-
-encodeQueryMode : QueryMode -> JE.Value
-encodeQueryMode queryMode =
-    JE.string <| toStringValue queryMode
