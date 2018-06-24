@@ -28,7 +28,6 @@ _testmain.go
 # Dictionaries folder
 /dictionaries
 dict-dictionaries/dictionaries
-*.json
 
 # Binary
 dict-backend/dict-backend
